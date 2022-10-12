@@ -1,3 +1,5 @@
+# Manage existing resources via Helm #
+
 Helm is really a very powerful tool for managing Kubernetes objects. With a single command, we can install or upgrade multiple related Kubernetes entities. Let's say we want to install any chart from the helm registry, we just need to type-in below command and helm will do the heavy lifting for us.
 
 ```
