@@ -38,6 +38,6 @@ Ref: https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/envvars
 
 > For this one, based on my understanding, it is kind of similar in usage to the above one, but it differs in some contexts like order presedence and error handling, and also this one is not that widely used, and unfortunately, was not able to find official documentation about it.
 
-In a nutshell, I ended up using "JAVA_TOOL_OPTIONS" and it worked without issues :)
+In a nutshell, I **ended up using "JAVA_TOOL_OPTIONS"** and it worked without issues :)
 
 Please feel free to add or correct anything I missed. 
