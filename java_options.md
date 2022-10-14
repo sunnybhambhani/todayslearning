@@ -10,9 +10,9 @@ Syntax:
            property. If value is a string with spaces, then enclose it in quotation marks (for example -Dfoo="foo bar").
 
 ```
-The above definition is captured from the Linux manuals, or so to say, man command <$ man java | less -p -D> 
-Just to add here, we are just pipeing man java to the less command, where -p (is used for pattern matching) -D is the pattern which we want to match.
-Since we are pipeing it to less, all the keys w.r.t. less will work without issues (for instance: n for next available match pattern).
+The above definition is captured from the Linux manuals, or so to say, man command **_<$ man java | less -p -D>_**
+- Just to add here, we are just pipeing man java to the less command, where -p (is used for pattern matching) -D is the pattern which we want to match.
+- Since we are pipeing it to less, all the keys w.r.t. less will work without issues (for instance: n for next available match pattern).
 
 And the reason was simple; I wanted to make sure my Docker image is flexible enough to support other values of the property as well.
 
