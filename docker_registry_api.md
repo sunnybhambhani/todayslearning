@@ -42,7 +42,7 @@ $TAG: Specific tag for which we are looking out for details.
 </br>
 I have yet to go into this topic in much detail, since there is a lot that we can do with the Docker Registry APIs.
 
-- Will update this file soon with what all things we can go with this.
+- Will update this file soon with what all things we can do with this.
 
 </br>
 If interested, check this out: https://docs.docker.com/registry/spec/api/
