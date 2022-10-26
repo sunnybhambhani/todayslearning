@@ -17,8 +17,13 @@ Ref: https://helm.sh/docs/helm/helm_plugin_uninstall/
 How this helps:
 1. It gives a UI to see what all helm charts are installed.
 2. Helps to see its revision history.
-3. Graphically browse all the resources which were a part of helm chart.
-4. It automatically uses KUBECONFIG, so we need to not do any extra efforts.
+4. Graphically browse all the resources which were a part of helm chart.
+5. It automatically uses KUBECONFIG, so we need to not do any extra efforts.
+6. You can see what all helm repositories you have, add the repo from the UI itself.
+7. See what all charts are a part of a repository.
+8. Install the chart from the UI itself.
+9. You can see the k8s manifest outcome on the UI itself and cross check before installing the chart.
+10. Add user-defined values.
 
 
 Its installation is relatively simple, 
@@ -28,4 +33,8 @@ helm plugin install https://github.com/komodorio/helm-dashboard.git
 Once the plugin is installed, just fire:
 
 helm dashboard 
+
+It will open a local webbrowser where you can traverse the UI and see what all magic it can do and how useful is this.
+
+
 
