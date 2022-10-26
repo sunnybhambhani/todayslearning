@@ -14,3 +14,18 @@ Similarly for uninstalling, you can use helm plugin uninstall [PLUGIN].
 Ref: https://helm.sh/docs/helm/helm_plugin_uninstall/
 
 
+How this helps:
+1. It gives a UI to see what all helm charts are installed.
+2. Helps to see its revision history.
+3. Graphically browse all the resources which were a part of helm chart.
+4. It automatically uses KUBECONFIG, so we need to not do any extra efforts.
+
+
+Its installation is relatively simple, 
+
+helm plugin install https://github.com/komodorio/helm-dashboard.git
+
+Once the plugin is installed, just fire:
+
+helm dashboard 
+
