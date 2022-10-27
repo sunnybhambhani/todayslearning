@@ -35,7 +35,7 @@ Ref: https://helm.sh/docs/helm/helm_plugin_uninstall/
 8. Install the chart from the UI itself. 
 9. You can see the k8s manifest outcome on the UI itself and cross check it before installing the chart. 
 10. Add user-defined values.
-11. It helps in troubleshooting as well, you can check the charts difference from the UI itself.
+11. It helps in troubleshooting as well, you can check the releases difference from the UI itself.
 
 </br>
 
