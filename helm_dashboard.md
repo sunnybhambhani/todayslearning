@@ -40,11 +40,15 @@ Ref: https://helm.sh/docs/helm/helm_plugin_uninstall/
 </br>
 
 **Installation**
+</br>
+
 Its installation is relatively simple, 
 
 >helm plugin install https://github.com/komodorio/helm-dashboard.git
 
 **How to access**
+</br>
+
 Once the plugin is installed, just fire:
 
 >helm dashboard 
