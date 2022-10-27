@@ -1,3 +1,5 @@
+# Helm dashboard #
+
 Helm can do a lot, but if we need to further enhance its usability, helm plugins really come in handy.
 
 I was just traversing some articles and came across a plugin called helm dashboard by Komodor which happened to be released just 3 days back at #kubecon , It really looked appealing, so I just thought to give it a try.
