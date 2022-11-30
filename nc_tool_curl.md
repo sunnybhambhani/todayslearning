@@ -47,3 +47,19 @@ x-xss-protection: 0
 x-frame-options: SAMEORIGIN
 alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000,h3-Q050=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000,quic=":443"; ma=2592000; v="46,43"
 ```
+- Get the HTTP status code and make your pipeline more meaningful based on the HTTP statusCode and its respective conditions.
+```
+$ curl -s -o /dev/null -w %{http_code} https://google.com
+301
+```
+- You can even use other HTTP methods like POST, DELETE, etc. with curl; we just need to specify --request or -X and the HTTP method name [the default method is GET].
+```
+$ curl -X GET https://google.com
+<HTML><HEAD><meta http-equiv="content-type" content="text/html;charset=utf-8">
+<TITLE>301 Moved</TITLE></HEAD><BODY>
+<H1>301 Moved</H1>
+The document has moved
+<A HREF="https://www.google.com/">here</A>.
+</BODY></HTML>
+```
+- You can even pass data using --data and --data-binary using -X POST method.
