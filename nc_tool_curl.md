@@ -6,13 +6,11 @@ There might be scenarios where one needs to check the reachability of servers or
 - include them in a pipeline.
 - there can be N number of use cases.
 
-Curl really stands out and is a pretty popular utility.
-</br>
 </br>
 
 
-This article is nothing about new technologies or tools, but it's just a refresher on the utility called curl and what all it can do :)
-</br>
+This article is nothing about new technologies or tools, but it's just a refresher on the utility called curl and what all it can do. Curl really stands out and is a pretty popular utility :)
+
 </br>
 
 
