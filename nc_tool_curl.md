@@ -63,3 +63,16 @@ The document has moved
 </BODY></HTML>
 ```
 - You can even pass data using --data and --data-binary using -X POST method.
+- Frequently used flags:
+```
+-v: In case you wanted to do verbose logging, you could use this flag.
+-s: In case you don't want anything to be shared over STDOUT, you can use the -s or --slient flag.
+-o: Sending the output to a file or /dev/null
+-X: If you want to pass any HTTP method.
+-I: In case you want to just fetch the headers, this can come handy.
+-w: Or --write-out helps to display a specific information after a request is successfully completed. Like http_code, http_version, content_type, etc.
+-k: In the case of https, this can be used to bypass certificate requirements.
+-u: In case the endpoint requires credentials, this can be used to pass in the username and password.
+```
+<br><br>
+There are many other flags that can be used based on an individual's requirements. For more information, you can fire `$man curl` and get a gist of what all it can do.
