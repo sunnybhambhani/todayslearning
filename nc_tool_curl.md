@@ -69,9 +69,9 @@ $ curl -L google.com
 .
 Output trimmed
 ```
-- If you want to have more detialed information about the request, use -v or --verbose
+- If you want to have more detailed information about the request, use -v or --verbose
 ```
-$ curl -vvv google.com 
+$ curl -v google.com 
 *   Trying 2404:6800:4009:82e::200e:80...
 * Connected to google.com (2404:6800:4009:82e::200e) port 80 (#0)
 > GET / HTTP/1.1
@@ -101,28 +101,57 @@ The document has moved
 </BODY></HTML>
 * Connection #0 to host google.com left intac
 ```
-- In some cases you might want to simulate the request is coming from an intended brower instead of curl in such cases -A can come handy.
+- In some cases you might want to simulate the request is coming from an intended brower instead of curl in such cases -A can come handy. Check below output confirming the request coming in from intended user-agent.
 ```
-$ curl -A "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36" google.com
+$ curl -v -A "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36" google.com 
+*   Trying 142.251.12.101:80...
+* TCP_NODELAY set
+* Connected to google.com (142.251.12.101) port 80 (#0)
+> GET / HTTP/1.1
+> Host: google.com
+> User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36
+> Accept: */*
+> 
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 301 Moved Permanently
+< Location: http://www.google.com/
+< Content-Type: text/html; charset=UTF-8
+< Cross-Origin-Opener-Policy-Report-Only: same-origin-allow-popups; report-to="gws"
+< Report-To: {"group":"gws","max_age":2592000,"endpoints":[{"url":"https://csp.withgoogle.com/csp/report-to/gws/other"}]}
+< BFCache-Opt-In: unload
+< Date: Thu, 01 Dec 2022 15:41:02 GMT
+< Expires: Sat, 31 Dec 2022 15:41:02 GMT
+< Cache-Control: public, max-age=2592000
+< Server: gws
+< Content-Length: 219
+< X-XSS-Protection: 0
+< X-Frame-Options: SAMEORIGIN
+< 
 <HTML><HEAD><meta http-equiv="content-type" content="text/html;charset=utf-8">
 <TITLE>301 Moved</TITLE></HEAD><BODY>
 <H1>301 Moved</H1>
 The document has moved
 <A HREF="http://www.google.com/">here</A>.
 </BODY></HTML>
+* Connection #0 to host google.com left intact
+```
+- You can send a request to an endpoint with TLS enabled using --cert / --key / --cacert flags or you can even bypass the certificate requirements using -k (or --insecure) flag. 
+```
+$ curl -k https://HTTPS_ENDPOINT
 ```
 - You can even pass data using --data and --data-binary using -X POST method.
 - Frequently used flags:
 ```
--v: In case you wanted to do verbose logging, you could use this flag.
--s: In case you don't want anything to be shared over STDOUT, you can use the -s or --slient flag.
--o: Sending the output to a file or /dev/null
--X: If you want to pass any HTTP method.
--H: If any extra header is required to be sent in the request, -H or --header can come handy.
+-v: In case you wanted to do verbose logging, you could use this flag ( or --verbose).
+-s: In case you don't want anything to be shared over STDOUT, you can use the -s (or --slient) flag.
+-o: Sending the output to a file or /dev/null (or --output).
+-X: If you want to pass any HTTP method (or --request).
+-H: If any extra header is required to be sent in the request, -H (or --header) can come handy.
 -I: In case you want to just fetch the headers, this can come handy.
--w: Or --write-out helps to display a specific information after a request is successfully completed. Like http_code, http_version, content_type, etc.
--k: In the case of https, this can be used to bypass certificate requirements.
--u: In case the endpoint requires credentials, this can be used to pass in the username and password.
+-w: (or --write-out) helps to display a specific information after a request is successfully completed. Like http_code, http_version, content_type, etc.
+-k: In the case of https, this can be used to bypass certificate requirements (or --insecure).
+-u: In case the endpoint requires credentials, this can be used to pass in the username and password (or --user).
+-A: Simulate a request from custom useragent (or --user-agent).
 ```
 <br><br>
 There are many other flags that can be used based on an individual's requirements. For more information, you can fire `$ man curl` and get a gist of what all magic it can do.
