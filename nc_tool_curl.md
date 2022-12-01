@@ -47,6 +47,7 @@ x-frame-options: SAMEORIGIN
 alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000,h3-Q050=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000,quic=":443"; ma=2592000; v="46,43"
 ```
 - Get the HTTP status code and make your pipeline more meaningful based on the HTTP statusCode and their respective conditions. You can get N number of values out of it like http_code, http_version, content_type, etc. See its man page for more details `$ man curl`.
+  - Instead of using awk/cut/grep/etc, this can come really handy.
 ```
 $ curl -s -o /dev/null -w %{http_code} https://google.com
 301
