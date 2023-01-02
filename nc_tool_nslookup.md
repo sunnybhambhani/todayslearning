@@ -1,3 +1,5 @@
+# nslookup #
+
 This is the second tool in the list wherein one needs to check the reachability of servers or the network connectivity, say for doing:
 
 - health checks.
