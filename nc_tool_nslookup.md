@@ -13,16 +13,10 @@ This is the second tool/utility on the list that is quite useful when it's neces
 This article is nothing about new technologies or tools, but it's just a refresher on the utility called nslookup and what all it can do :)
 
 
-In simple terms, it is a utility that queries domain name servers to determine whether or not a specific IP address or domain name is resolveable. Honestly speaking, it doesn't end just with the A records, you can get a wealth of information just from this tool.
+In simple terms, it is a utility that queries domain name servers to determine whether or not a specific IP address or domain name is resolveable. Honestly speaking, it doesn't end just with the A records, you can get a wealth of information just from this tool. Below, we will just go through some of the simple examples of how it can help and what information we can get?
 
 
-Below, we will just go through some of the simple examples of how it can help and what information can we can get?
-
-
-Though this command can be used in both modes, interactive and non-interactive, we will mostly look at the non-interactive side of it.
-
-
-But still, if you are looking for the interactive one, just type `nslookup` and press Enter, and you will be brought to the nslookup prompt.
+Though this command can be used in both modes, interactive and non-interactive, we will mostly look at the non-interactive side of it. But still, if you are looking for the interactive one, just type `nslookup` and press Enter, and you will be brought to the nslookup prompt.
 
 
 ```
@@ -192,3 +186,5 @@ Address: 2001:4860:4802:36::a#53
 Name: google.com
 Address: 142.250.192.110
 ```
+
+If you want to learn more about nslookup and its option, just fire `man nslookup`.
