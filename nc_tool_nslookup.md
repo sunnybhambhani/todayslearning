@@ -1,7 +1,7 @@
 # nslookup #
 
 
-This is the second tool on the list that is quite useful when it's necessary to determine whether a domain name or IP address can be resolved, or there can be other scenarios as well like:
+This is the second tool/utility on the list that is quite useful when it's necessary to determine whether a domain name or IP address can be resolved, or there can be other scenarios as well like:
 
 - health checks.
 - troubleshooting.
