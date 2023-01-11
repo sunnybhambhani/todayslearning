@@ -13,8 +13,9 @@ This is the second tool/utility on the list that is quite useful when it's neces
 This article is nothing about new technologies or tools, but it's just a refresher on the utility called nslookup and what all it can do :)
 
 
-In simple terms, it is a utility that queries domain name servers to determine whether or not a specific IP address or domain name is resolveable. Honestly speaking, it doesn't end just with the A records, you can get a wealth of information just from this tool. Below, we will just go through some of the simple examples of how it can help and what information we can get?
+In simple terms, it is a utility that queries domain name servers to determine whether or not a specific IP address or domain name is resolveable. Honestly speaking, it doesn't end just with the A records, you can get a wealth of information just from this tool. 
 
+Below, we will just go through some of the simple examples of how it can help and what information we can get?
 
 Though this command can be used in both modes, interactive and non-interactive, we will mostly look at the non-interactive side of it. But still, if you are looking for the interactive one, just type `nslookup` and press Enter, and you will be brought to the nslookup prompt.
 
@@ -53,7 +54,7 @@ Address: 2404:6800:4009:828::200e
 ```
 
 
-If you want to do a reverse DNS lookup, simply type `nslookup IP`:
+- If you want to do a reverse DNS lookup, simply type `nslookup IP`:
 ```
 $ nslookup 142.250.192.46
 46.192.250.142.in-addr.arpa name = bom12s15-in-f14.1e100.net.
