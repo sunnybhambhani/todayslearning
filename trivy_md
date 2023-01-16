@@ -7,3 +7,13 @@ Trivy is a command-line vulnerability scanner utility, not just for containers o
 Just a brief introduction to Trivy, It is designed to quickly and easily identify known vulnerabilities in your platform and can be integrated into your CI/CD pipeline to ensure that vulnerabilities are detected and addressed early in the development process. It is an open-source software and is available for use on a wide range of operating systems, including Linux, macOS, and Windows.
 
 
+Here are some examples of how to use Trivy:
+
+Scan a local container image:
+trivy image nginx-test:v1
+
+Scan a remote container image:
+trivy image docker.io/library/nginx:latest
+
+Scan a local directory:
+trivy filesystem /opt/nginx
