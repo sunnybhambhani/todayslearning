@@ -1,3 +1,4 @@
+# IN-PROGRESS #
 # Trivy #
 
 Scanning for vulnerabilities is critical, and there are many tools and utilities available today, of which Trivy is my favorite.
@@ -17,3 +18,15 @@ trivy image docker.io/library/nginx:latest
 
 Scan a local directory:
 trivy filesystem /opt/nginx
+
+Scan a running container:
+trivy container CONTAINER_ID
+
+Scan multiple images at once:
+trivy image nginx-test:v1 nginx-test:v2
+
+Scan with a specific vulnerability database:
+trivy --db-path /opt/vuln_db image nginx-test:v1
+
+Scan and output results in JSON format:
+trivy --format json image nginx-test:v1
