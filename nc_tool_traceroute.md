@@ -13,3 +13,11 @@ $ traceroute google.com
 To perform a traceroute to a host with the IP address:
 $ traceroute 142.251.42.14
 
+To perform a traceroute with a maximum of 10 hops:
+$ traceroute -m 10 google.com
+
+To perform a traceroute with a maximum wait time of 2 seconds per hop:
+$ traceroute -w 2 google.com
+
+To perform a traceroute with only one packet sent per hop:
+$ traceroute -q 1 google.com
