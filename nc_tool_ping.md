@@ -4,7 +4,7 @@
 
 It basiclaly works by sending ICMP (Internet Control Message Protocol) echo request packets to the target host and listens for ICMP echo response packets back.
 
-This is one of the most widely used utilities for resolving network problems.
+This is one of the most widely used utilities for troubleshooting network problems.
 
 - To check if a website is up, you can use the command "ping DOMAIN_NAME".
 ```
