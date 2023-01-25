@@ -2,7 +2,9 @@
 
 "ping" is a computer networking utility which is used to test whether a particular host is reachable across an IP network.
 
-It works by sending ICMP (Internet Control Message Protocol) echo request packets to the target host and listening for ICMP echo response packets back.
+It basiclaly works by sending ICMP (Internet Control Message Protocol) echo request packets to the target host and listens for ICMP echo response packets back.
+
+This is one of the most widely used utilities for resolving network problems.
 
 - To check if a website is up, you can use the command "ping DOMAIN_NAME".
 ```
@@ -80,7 +82,7 @@ PING google.com(bom12s12-in-x0e.1e100.net (2404:6800:4009:822::200e)) 56 data by
 rtt min/avg/max/mdev = 7.333/119.203/239.898/95.149 ms
 ```
 
-- To stop the operation after specific interval, use `-w` flag.
+- To stop the operation after specific interval(as in time), use `-w` flag, in below example ping will automatically stop after 5 seconds.
 ```
 $ ping -w 5 google.com
 PING google.com(bom12s12-in-x0e.1e100.net (2404:6800:4009:822::200e)) 56 data bytes
