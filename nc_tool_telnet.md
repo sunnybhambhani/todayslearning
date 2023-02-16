@@ -30,6 +30,7 @@ $
 ```
 
 - To specifically connect to IPv6, use -6:
+```
 $ telnet -6 google.com 443
 Trying 2404:6800:4009:821::200e...
 Connected to google.com.
