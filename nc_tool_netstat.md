@@ -26,8 +26,19 @@ $ netstat -at
 $ netstat -au 
 ```
 
-- Ti display kernal IP routing table: 
+- To display kernal IP routing table: 
 - PS: The kernel IP routing table, is also known as the IP routing table, which contains information about the network topology and routing paths on a Linux system.
 ```
-netstat -r
+$ netstat -r
+```
+
+- To display the interface table:
+```
+$ netstat -i
+```
+
+- To find a process that is using a particular port, in below example we are using `|` to fed the output of netstat to grep to filter out the results.
+- -n is to get the IP addresses/numeric values (instead of domain names).
+```
+$ netstat -an | grep <PORT_NUMBER>
 ```
