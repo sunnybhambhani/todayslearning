@@ -42,3 +42,5 @@ $ netstat -i
 ```
 $ netstat -an | grep <PORT_NUMBER>
 ```
+
+It is pretty powerful, feel free to check its capabilities via `man netstat`.
