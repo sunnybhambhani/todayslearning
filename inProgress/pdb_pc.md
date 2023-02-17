@@ -25,8 +25,29 @@ There can be several other reasons as well, In general, a disruption can cause d
 
 ### What are PriorityClass and PodDisruptionBudget? ###
 
-The PodDisruptionBudget (PDB) is a Kubernetes object that specifies the minimum requirements for a set of pods' availability during planned disruptions such as maintenance, upgrades, scaling, or other events that may cause a disruption.
+PodDisruptionBudget (PDB) is a Kubernetes object that specifies the minimum requirements for a set of pods' availability during planned disruptions such as maintenance, upgrades, scaling, or other events that may cause a disruption.
 
 PDBs can be used in a Kubernetes cluster to ensure the high availability of critical workloads. Even during planned disruptions or events, the PDB ensures that a certain number or percentage of pods in a deployment or replica set are always available and running.
 
 PDB prevents the removal of additional pods from service until the minimum availability requirements are met. It adds another layer of reliability and resilience to Kubernetes workloads, ensuring that they are highly available and can continue to operate even when there are disruptions.
+
+Below is a sample manifest file, let's break down the different parts of this file:
+
+```yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: test-pdb
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: test-app
+```
+
+- `apiVersion` and `kind`, These two attributes, indicate the Kubernetes API version and the type of object being generated, a PodDisruptionBudget.
+- `metadata`, This part includes the object's metadata, such as its name.
+- `spec`, The specifics of the PodDisruptionBudget are described in this section. The minAvailable key is set to 2 in this example, indicating that there must always be two pods available. Also, a selection is being used to match the labels of the pods covered by this PDB. Here, we are matching the pods in this instance to the label app: test-app.
+
+In this example PDB makes sure that there are always two pods with the label "app: test-app" available.
+
