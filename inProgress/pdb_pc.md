@@ -25,7 +25,7 @@ There can be several other reasons as well, In general, a disruption can cause d
 
 ### What are PriorityClass and PodDisruptionBudget? ###
 
-PodDisruptionBudget (PDB) is a Kubernetes object that specifies the minimum requirements for a set of pods' availability during planned disruptions such as maintenance, upgrades, scaling, or other events that may cause a disruption.
+**PodDisruptionBudget (PDB)** is a Kubernetes object that specifies the minimum requirements for a set of pods' availability during planned disruptions such as maintenance, upgrades, scaling, or other events that may cause a disruption.
 
 PDBs can be used in a Kubernetes cluster to ensure the high availability of critical workloads. Even during planned disruptions or events, the PDB ensures that a certain number or percentage of pods in a deployment or replica set are always available and running.
 
@@ -50,4 +50,8 @@ spec:
 - `spec`, The specifics of the PodDisruptionBudget are described in this section. The minAvailable key is set to 2 in this example, indicating that there must always be two pods available. Also, a selection is being used to match the labels of the pods covered by this PDB. Here, we are matching the pods in this instance to the label app: test-app.
 
 In this example PDB makes sure that there are always two pods with the label "app: test-app" available.
+
+**PriorityClass** is a cluster-wide API object in Kubernetes and part of the scheduling.k8s.io/v1 API group. It contains a mapping of the PriorityClass name (defined in .metadata.name) and an integer value (defined in .value). This represents the value that the scheduler uses to determine Pod's relative priority.
+
+It ensures that mission-critical pods can run even if resources are constrained, To learn more about how PriorityClass functions and how the decision of scheduling/eviction of pods are handled, please refer my previous article here: https://kubernetes.io/blog/2023/01/12/protect-mission-critical-pods-priorityclass/#priorityclasses-in-kubernetes 
 
