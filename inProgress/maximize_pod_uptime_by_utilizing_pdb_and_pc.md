@@ -51,6 +51,6 @@ spec:
 
 In this example PDB makes sure that there are always two pods with the label "app: test-app" available.
 
-**PriorityClass** is a cluster-wide API object in Kubernetes and part of the scheduling.k8s.io/v1 API group. It contains a mapping of the PriorityClass name (defined in .metadata.name) and an integer value (defined in .value). This represents the value that the scheduler uses to determine Pod's relative priority.
+**PriorityClass** is a cluster-wide API object in Kubernetes and part of the scheduling.k8s.io/v1 API group. It contains a mapping of the PriorityClass name (defined in .metadata.name) and an integer value (defined in .value). This represents the value that the scheduler uses to determine Pod's relative priority, which is then used by kube-scheduler to schedule the pods in a specific priority.
 
 It ensures that mission-critical pods can run even if resources are constrained, To learn more about how PriorityClass functions and how the decision of scheduling/eviction of pods are handled, please refer my previous article here: https://kubernetes.io/blog/2023/01/12/protect-mission-critical-pods-priorityclass/#priorityclasses-in-kubernetes 
