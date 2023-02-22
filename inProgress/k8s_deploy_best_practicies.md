@@ -2,7 +2,7 @@
 
 In today's world, Kubernetes is being used in almost every organization, and deploying an application in Kubernetes can be a bit daunting if not done properly. 
 
-Nevertheless, by adhering to best practises, you can make sure your deployment is reliable, scalable, and maintainable.
+Nevertheless, by adhering to best practises, you can make sure your deployments are reliable, scalable, and maintainable.
 
 Here are some recommendations for optimal practises:
 
