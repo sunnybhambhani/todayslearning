@@ -14,3 +14,4 @@ Here are some recommendations for optimal practises:
 - ConfigMaps and Secrets: To manage application configuration and sensitive data, use ConfigMaps and Secrets. You can segregate your application's configuration from its code using these resources, which makes it simpler to manage and update.
 - Network policies: To limit network access to the resources in your application, use network policies. This can help safeguard critical data and stop illegal access to your application.
 - Secure images: Use reputable sources for your images, and check them for vulnerabilities before distribution or deployment.
+- Least privilege: To limit access to your application's components and cluster resources, use the least privilege concept. Provide users only the minimum amount of access necessary for your application to run.
