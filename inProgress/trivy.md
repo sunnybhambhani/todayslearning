@@ -15,7 +15,7 @@ Though running trivy is simple and only requires one command, one common questio
 
 Here are some examples of how to use Trivy:
 
-- Scan a local container image: `trivy image IMAGE`
+- Scan a local container image: `trivy image IMAGE:TAG`, in below example `nginx.stubs:latest` this is a local image.
 ```
 $ trivy image nginx.stubs:latest
 2023-02-24T11:17:55.275+0530	INFO	Vulnerability scanning is enabled
@@ -30,22 +30,71 @@ nginx.stubs:latest (debian 11.4)
 
 Total: 185 (UNKNOWN: 0, LOW: 89, MEDIUM: 50, HIGH: 39, CRITICAL: 7)
 
+Output trimmed, Expected output is a list of all vulnerabilities in the format shown below.
+
+┌──────────────┬─ ─────────────┬──────────┬────────────────────┬─────────────────┬───────────────────────────────┐
+│   Library    │ Vulnerability │ Severity │  Installed Version │  Fixed Version  │            Title              │
+├──────────────┼── ────────────┼──────────┼────────────────────┼─────────────────┼───────────────────────────────┤
+
 ```
 
-Scan a remote container image:
-trivy image docker.io/library/nginx:latest
+- Scan a remote container image: `trivy image REPO/IMAGE:TAG`, in below example `docker.io/library/nginx:latest` this is a image referring docker registry.
+```
+$ trivy image docker.io/library/nginx:latest
+2023-02-24T11:42:39.210+0530	INFO	Vulnerability scanning is enabled
+2023-02-24T11:42:39.210+0530	INFO	Secret scanning is enabled
+2023-02-24T11:42:39.210+0530	INFO	If your scanning is slow, please try '--security-checks vuln' to disable secret scanning
+2023-02-24T11:42:39.211+0530	INFO	Please see also https://aquasecurity.github.io/trivy/v0.36/docs/secret/scanning/#recommendation for faster secret detection
+2023-02-24T11:42:39.219+0530	INFO	Detected OS: debian
+2023-02-24T11:42:39.219+0530	INFO	Detecting Debian vulnerabilities...
+2023-02-24T11:42:39.241+0530	INFO	Number of language-specific files: 0
 
-Scan a local directory:
-trivy filesystem /opt/nginx
+docker.io/library/nginx:latest (debian 11.4)
 
-Scan a running container:
-trivy container CONTAINER_ID
+Total: 183 (UNKNOWN: 0, LOW: 89, MEDIUM: 50, HIGH: 37, CRITICAL: 7)
+
+Output trimmed, Expected output is a list of all vulnerabilities in the format shown below.
+
+┌──────────────┬─ ─────────────┬──────────┬────────────────────┬─────────────────┬───────────────────────────────┐
+│   Library    │ Vulnerability │ Severity │  Installed Version │  Fixed Version  │            Title              │
+├──────────────┼── ────────────┼──────────┼────────────────────┼─────────────────┼───────────────────────────────┤
+
+```
+
+Scan a local directory: `trivy filesystem FS_PATH`, here I have kept a test private key in my /tmp directory just for testing purposes.
+```
+$ trivy filesystem /tmp
+2023-02-24T11:45:17.957+0530	INFO	Vulnerability scanning is enabled
+2023-02-24T11:45:17.957+0530	INFO	Secret scanning is enabled
+2023-02-24T11:45:17.957+0530	INFO	If your scanning is slow, please try '--security-checks vuln' to disable secret scanning
+2023-02-24T11:45:17.957+0530	INFO	Please see also https://aquasecurity.github.io/trivy/v0.36/docs/secret/scanning/#recommendation for faster secret detection
+2023-02-24T11:45:17.961+0530	INFO	Number of language-specific files: 0
+
+test (secrets)
+
+Total: 1 (UNKNOWN: 0, LOW: 0, MEDIUM: 0, HIGH: 1, CRITICAL: 0)
+
+HIGH: AsymmetricPrivateKey (private-key)
+═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Asymmetric Private Key
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ test:1
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 [ -----BEGIN OPENSSH PRIVATE KEY-----*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************-----END OPENSSH PRIVATE KEY-----
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+```
 
 Scan multiple images at once:
-trivy image nginx-test:v1 nginx-test:v2
+```
+$ trivy image nginx-test:v1 nginx-test:v2
+```
 
 Scan with a specific vulnerability database:
-trivy --db-path /opt/vuln_db image nginx-test:v1
+```
+$ trivy --db-path /opt/vuln_db image nginx-test:v1
+```
 
 Scan and output results in JSON format:
-trivy --format json image nginx-test:v1
+```
+$ trivy --format json image nginx-test:v1
+```
