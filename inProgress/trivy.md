@@ -61,7 +61,7 @@ Output trimmed, Expected output is a list of all vulnerabilities in the format s
 
 ```
 
-Scan a local directory: `trivy filesystem FS_PATH`, here I have kept a test private key in my /tmp directory just for testing purposes.
+- Scan a local directory: `trivy filesystem FS_PATH`, here I have kept a test private key in my /tmp directory just for testing purposes.
 ```
 $ trivy filesystem /tmp
 2023-03-09T16:08:26.699+0530	INFO	Vulnerability scanning is enabled
@@ -84,7 +84,7 @@ Asymmetric Private Key
 ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ```
 
-Download trivy database (can be used for automation - if required), you can use `trivy image --download-db-only --cache-dir PATH_FOR_DB`
+- Download trivy database (can be used for automation - if required), you can use `trivy image --download-db-only --cache-dir PATH_FOR_DB`
 ```
 $ trivy image --download-db-only --cache-dir /tmp/trivy-db
 2023-03-09T16:26:52.793+0530	INFO	Need to update DB
@@ -93,7 +93,7 @@ $ trivy image --download-db-only --cache-dir /tmp/trivy-db
 35.94 MiB / 35.94 MiB [-----------------------------------------------------------------------------------------------------------------------------------------------------------] 100.00% 2.64 MiB p/s 14s
 ```
 
-Scan with a specific vulnerability database:
+- Scan with a specific vulnerability database:
 ```
 $ trivy image --cache-dir /tmp/trivy-db nginx
 2023-03-09T16:30:06.457+0530	INFO	Vulnerability scanning is enabled
@@ -116,7 +116,7 @@ Output trimmed, Expected output is a list of all vulnerabilities in the format s
 
 ```
 
-Scan and output results in JSON format:
+- Scan and output results in JSON format:
 ```
 $ trivy --format json image nginx
 ```
