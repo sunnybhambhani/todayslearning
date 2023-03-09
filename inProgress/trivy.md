@@ -84,17 +84,45 @@ Asymmetric Private Key
 ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ```
 
-Scan multiple images at once:
+Download trivy database (can be used for automation - if required), you can use `trivy image --download-db-only --cache-dir PATH_FOR_DB`
 ```
-$ trivy image nginx-test:v1 nginx-test:v2
+$ trivy image --download-db-only --cache-dir /tmp/trivy-db
+2023-03-09T16:26:52.793+0530	INFO	Need to update DB
+2023-03-09T16:26:52.793+0530	INFO	DB Repository: ghcr.io/aquasecurity/trivy-db
+2023-03-09T16:26:52.793+0530	INFO	Downloading DB...
+35.94 MiB / 35.94 MiB [-----------------------------------------------------------------------------------------------------------------------------------------------------------] 100.00% 2.64 MiB p/s 14s
 ```
 
 Scan with a specific vulnerability database:
 ```
-$ trivy --db-path /opt/vuln_db image nginx-test:v1
+$ trivy image --cache-dir /tmp/trivy-db nginx
+2023-03-09T16:30:06.457+0530	INFO	Vulnerability scanning is enabled
+2023-03-09T16:30:06.457+0530	INFO	Secret scanning is enabled
+2023-03-09T16:30:06.457+0530	INFO	If your scanning is slow, please try '--security-checks vuln' to disable secret scanning
+2023-03-09T16:30:06.457+0530	INFO	Please see also https://aquasecurity.github.io/trivy/v0.36/docs/secret/scanning/#recommendation for faster secret detection
+2023-03-09T16:30:09.081+0530	INFO	Detected OS: debian
+2023-03-09T16:30:09.081+0530	INFO	Detecting Debian vulnerabilities...
+2023-03-09T16:30:09.108+0530	INFO	Number of language-specific files: 0
+
+nginx (debian 11.4)
+
+Total: 185 (UNKNOWN: 0, LOW: 86, MEDIUM: 50, HIGH: 40, CRITICAL: 9)
+
+Output trimmed, Expected output is a list of all vulnerabilities in the format shown below.
+
+┌──────────────┬─ ─────────────┬──────────┬────────────────────┬─────────────────┬───────────────────────────────┐
+│   Library    │ Vulnerability │ Severity │  Installed Version │  Fixed Version  │            Title              │
+├──────────────┼── ────────────┼──────────┼────────────────────┼─────────────────┼───────────────────────────────┤
+
 ```
 
 Scan and output results in JSON format:
 ```
-$ trivy --format json image nginx-test:v1
+$ trivy --format json image nginx
 ```
+
+
+
+Note:
+- When Trivy first starts up, it downloads its vulnerability database every 12 hours.
+- Usually the process is pretty fast, since the database is pretty light weight, but if need be this can be skipped as well by using `--skip-update` option while running the scan.
