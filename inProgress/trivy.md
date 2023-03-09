@@ -1,12 +1,12 @@
 ## trivy ##
 
-Scanning for vulnerabilities is critical, and there are numerous tools and utilities available today, my favourite of which is Trivy.
+It is critical to scan for vulnerabilities, and there are numerous tools and utilities available today, my favourite of which is Trivy.
 
-Trivy is a command-line vulnerability scanner utility that can do a lot more than just scan containers or Docker images. It can assist you in scanning your config files for misconfigurations, scanning the filesystem, scanning your local and remote repositories, and, most importantly, scanning your K8s cluster (though this is an experimental feature as of this writing).
+Trivy is a command-line vulnerability scanner that can do much more than simply scan containers or Docker images. It can help you scan your config files for errors, scan the filesystem, scan your local and remote repositories, and, most importantly, scan your K8s cluster (though this is an experimental feature as of this writing).
 
-Just a quick rundown of Trivy. It is designed to detect known vulnerabilities in your platform quickly and easily, and it can be integrated into your CI/CD pipeline to ensure that vulnerabilities are detected and addressed early in the development process. It is open-source software that can run on a variety of operating systems, including Linux, macOS, and Windows.
+Just a quick overview of Trivy. It is intended to quickly and easily detect known vulnerabilities in your platform, and it can be integrated into your CI/CD pipeline to ensure that vulnerabilities are discovered and addressed early in the development process. It is free and open-source software that can run on a variety of operating systems such as Linux, macOS, and Windows.
 
-Though running trivy is simple and only requires one command, one common question is how exactly trivy works. To provide a brief overview, the following is the process that trivy follows in the backend:
+Though running trivy is simple and only requires one command, one frequently asked question is how trivy works. To give you a quick overview, trivy follows the following process in the backend:
 - First comes `image scanning`, Trivy starts by scanning the container image layer by layer. It examines the filesystem, installed packages and libraries.
 - Trivy then consults a `vulnerability database` to identify known vulnerabilities associated with the image's packages and libraries. This database is managed by 'aquasecurity', but it is enriched and curated by multiple other databases such as NVD, RHSA, and others.
 - Once Trivy has compiled a list of vulnerabilities, it evaluates each one to determine the severity and likelihood of exploitation. The CVSS score and the vulnerability description are used in this `assessment`.
