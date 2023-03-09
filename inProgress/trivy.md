@@ -18,17 +18,17 @@ Here are some examples of how to use Trivy:
 - Scan a local container image: `trivy image IMAGE:TAG`, in below example `nginx.stubs:latest` this is a local image.
 ```
 $ trivy image nginx.stubs:latest
-2023-02-24T11:17:55.275+0530	INFO	Vulnerability scanning is enabled
-2023-02-24T11:17:55.275+0530	INFO	Secret scanning is enabled
-2023-02-24T11:17:55.275+0530	INFO	If your scanning is slow, please try '--security-checks vuln' to disable secret scanning
-2023-02-24T11:17:55.275+0530	INFO	Please see also https://aquasecurity.github.io/trivy/v0.36/docs/secret/scanning/#recommendation for faster secret detection
-2023-02-24T11:17:58.656+0530	INFO	Detected OS: debian
-2023-02-24T11:17:58.656+0530	INFO	Detecting Debian vulnerabilities...
-2023-02-24T11:17:58.667+0530	INFO	Number of language-specific files: 0
+2023-03-09T16:06:38.582+0530	INFO	Vulnerability scanning is enabled
+2023-03-09T16:06:38.582+0530	INFO	Secret scanning is enabled
+2023-03-09T16:06:38.582+0530	INFO	If your scanning is slow, please try '--security-checks vuln' to disable secret scanning
+2023-03-09T16:06:38.582+0530	INFO	Please see also https://aquasecurity.github.io/trivy/v0.36/docs/secret/scanning/#recommendation for faster secret detection
+2023-03-09T16:06:38.595+0530	INFO	Detected OS: debian
+2023-03-09T16:06:38.595+0530	INFO	Detecting Debian vulnerabilities...
+2023-03-09T16:06:38.629+0530	INFO	Number of language-specific files: 0
 
 nginx.stubs:latest (debian 11.4)
 
-Total: 185 (UNKNOWN: 0, LOW: 89, MEDIUM: 50, HIGH: 39, CRITICAL: 7)
+Total: 187 (UNKNOWN: 0, LOW: 86, MEDIUM: 50, HIGH: 42, CRITICAL: 9)
 
 Output trimmed, Expected output is a list of all vulnerabilities in the format shown below.
 
@@ -41,17 +41,17 @@ Output trimmed, Expected output is a list of all vulnerabilities in the format s
 - Scan a remote container image: `trivy image REPO/IMAGE:TAG`, in below example `docker.io/library/nginx:latest` this is a image referring docker registry.
 ```
 $ trivy image docker.io/library/nginx:latest
-2023-02-24T11:42:39.210+0530	INFO	Vulnerability scanning is enabled
-2023-02-24T11:42:39.210+0530	INFO	Secret scanning is enabled
-2023-02-24T11:42:39.210+0530	INFO	If your scanning is slow, please try '--security-checks vuln' to disable secret scanning
-2023-02-24T11:42:39.211+0530	INFO	Please see also https://aquasecurity.github.io/trivy/v0.36/docs/secret/scanning/#recommendation for faster secret detection
-2023-02-24T11:42:39.219+0530	INFO	Detected OS: debian
-2023-02-24T11:42:39.219+0530	INFO	Detecting Debian vulnerabilities...
-2023-02-24T11:42:39.241+0530	INFO	Number of language-specific files: 0
+2023-03-09T16:07:12.656+0530	INFO	Vulnerability scanning is enabled
+2023-03-09T16:07:12.656+0530	INFO	Secret scanning is enabled
+2023-03-09T16:07:12.656+0530	INFO	If your scanning is slow, please try '--security-checks vuln' to disable secret scanning
+2023-03-09T16:07:12.656+0530	INFO	Please see also https://aquasecurity.github.io/trivy/v0.36/docs/secret/scanning/#recommendation for faster secret detection
+2023-03-09T16:07:12.664+0530	INFO	Detected OS: debian
+2023-03-09T16:07:12.664+0530	INFO	Detecting Debian vulnerabilities...
+2023-03-09T16:07:12.675+0530	INFO	Number of language-specific files: 0
 
 docker.io/library/nginx:latest (debian 11.4)
 
-Total: 183 (UNKNOWN: 0, LOW: 89, MEDIUM: 50, HIGH: 37, CRITICAL: 7)
+Total: 185 (UNKNOWN: 0, LOW: 86, MEDIUM: 50, HIGH: 40, CRITICAL: 9)
 
 Output trimmed, Expected output is a list of all vulnerabilities in the format shown below.
 
@@ -64,22 +64,22 @@ Output trimmed, Expected output is a list of all vulnerabilities in the format s
 Scan a local directory: `trivy filesystem FS_PATH`, here I have kept a test private key in my /tmp directory just for testing purposes.
 ```
 $ trivy filesystem /tmp
-2023-02-24T11:45:17.957+0530	INFO	Vulnerability scanning is enabled
-2023-02-24T11:45:17.957+0530	INFO	Secret scanning is enabled
-2023-02-24T11:45:17.957+0530	INFO	If your scanning is slow, please try '--security-checks vuln' to disable secret scanning
-2023-02-24T11:45:17.957+0530	INFO	Please see also https://aquasecurity.github.io/trivy/v0.36/docs/secret/scanning/#recommendation for faster secret detection
-2023-02-24T11:45:17.961+0530	INFO	Number of language-specific files: 0
+2023-03-09T16:08:26.699+0530	INFO	Vulnerability scanning is enabled
+2023-03-09T16:08:26.699+0530	INFO	Secret scanning is enabled
+2023-03-09T16:08:26.699+0530	INFO	If your scanning is slow, please try '--security-checks vuln' to disable secret scanning
+2023-03-09T16:08:26.699+0530	INFO	Please see also https://aquasecurity.github.io/trivy/v0.36/docs/secret/scanning/#recommendation for faster secret detection
+2023-03-09T16:08:26.702+0530	INFO	Number of language-specific files: 0
 
-test (secrets)
+hola (secrets)
 
 Total: 1 (UNKNOWN: 0, LOW: 0, MEDIUM: 0, HIGH: 1, CRITICAL: 0)
 
 HIGH: AsymmetricPrivateKey (private-key)
-═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 Asymmetric Private Key
-───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
- test:1
-───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ hola:1
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
    1 [ -----BEGIN OPENSSH PRIVATE KEY-----*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************-----END OPENSSH PRIVATE KEY-----
 ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ```
