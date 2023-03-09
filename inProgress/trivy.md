@@ -121,7 +121,41 @@ Output trimmed, Expected output is a list of all vulnerabilities in the format s
 $ trivy --format json image nginx
 ```
 
+- Scan an image and only list vulnerabilities with specific severity levels. In below example we are just looking for CRITICAL vulnerabilities and see the number reduced to 9.
+```
+$ trivy image --severity CRITICAL nginx
+2023-03-09T16:44:23.447+0530	INFO	Vulnerability scanning is enabled
+2023-03-09T16:44:23.447+0530	INFO	Secret scanning is enabled
+2023-03-09T16:44:23.447+0530	INFO	If your scanning is slow, please try '--security-checks vuln' to disable secret scanning
+2023-03-09T16:44:23.447+0530	INFO	Please see also https://aquasecurity.github.io/trivy/v0.36/docs/secret/scanning/#recommendation for faster secret detection
+2023-03-09T16:44:23.457+0530	INFO	Detected OS: debian
+2023-03-09T16:44:23.457+0530	INFO	Detecting Debian vulnerabilities...
+2023-03-09T16:44:23.478+0530	INFO	Number of language-specific files: 0
 
+nginx (debian 11.4)
+
+Total: 9 (CRITICAL: 9)
+
+Output trimmed.
+```
+
+- There may be times when you want to ignore unfixed vulnerabilities in order to prioritise fixing other vulnerabilities. Then '--ignore-unfixed' is your best friend. In the example below, notice how the total number has been reduced to 6.
+```
+$ trivy image --severity CRITICAL --ignore-unfixed nginx 
+2023-03-09T16:54:38.218+0530	INFO	Vulnerability scanning is enabled
+2023-03-09T16:54:38.218+0530	INFO	Secret scanning is enabled
+2023-03-09T16:54:38.218+0530	INFO	If your scanning is slow, please try '--security-checks vuln' to disable secret scanning
+2023-03-09T16:54:38.218+0530	INFO	Please see also https://aquasecurity.github.io/trivy/v0.36/docs/secret/scanning/#recommendation for faster secret detection
+2023-03-09T16:54:38.225+0530	INFO	Detected OS: debian
+2023-03-09T16:54:38.225+0530	INFO	Detecting Debian vulnerabilities...
+2023-03-09T16:54:38.235+0530	INFO	Number of language-specific files: 0
+
+nginx (debian 11.4)
+
+Total: 6 (CRITICAL: 6)
+
+Output trimmed.
+```
 
 Note:
 - When Trivy first starts up, it downloads its vulnerability database every 12 hours.
