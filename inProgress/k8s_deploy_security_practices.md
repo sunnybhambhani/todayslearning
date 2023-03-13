@@ -10,7 +10,6 @@ The following is a list of settings and configurations that can be implemented t
   - The `securityContext.allowPrivilegeEscalation` setting determines whether a container's privileges can be escalated. When `true`, it grants a container additional privileges beyond those granted by default.
   - Setting `allowPrivilegeEscalation` to `false` can help reduce the risk of privilege escalation attacks.
   ```yaml
-  spec:
   containers:
   - name: webapp
     image: nginx:1.17
@@ -27,7 +26,6 @@ The following is a list of settings and configurations that can be implemented t
   - The `securityContext` section is used in the following example to set `runAsNonRoot` to `true`. This means the container will be started with a non-root UID.
   - It's generally recommended to run containers as non-root whenever possible to reduce the risk of privilege escalation attacks. Keep in mind, however, that some applications may require root access to function properly.
   ```yaml
-  spec:
   containers:
   - name: webapp
     image: nginx:1.17
@@ -43,7 +41,6 @@ The following is a list of settings and configurations that can be implemented t
   - When this setting is enabled and set to `true`, the container's root filesystem is mounted as read-only, resulting in a runtime error if any attempt to write to the root filesystem fails.
   - Enabling this will for sure reduce the attack surface, However, keep in mind that this setting may not be appropriate for all containers, particularly those that require write access to the root filesystem to function properly.
   ```yaml
-  spec:
   containers:
   - name: webapp
     image: nginx:1.17
@@ -60,7 +57,6 @@ The following is a list of settings and configurations that can be implemented t
   - To reduce the risk of privilege escalation attacks, containers should be run as non-root users whenever possible.
   - This configuration can be used at the pod and/or container levels; if set at the container level, it will override the pod's configuration.
   ```yaml
-  spec:
   securityContext:
     runAsUser: 1000
   containers:
@@ -75,7 +71,6 @@ The following is a list of settings and configurations that can be implemented t
   - The `securityContext.runAsGroup` setting specifies the group ID under which the container's main process should run.
   - - This configuration too can be used at the pod and/or container levels; if set at the container level, it will override the pod's configuration.
   ```yaml
-  spec:
   containers:
   - name: webapp
     image: nginx:1.17
@@ -135,7 +130,6 @@ The following is a list of settings and configurations that can be implemented t
   - The settings `resources.limits.cpu` and `resources.limits.memory` specifies the `maximum` amount of CPU/Memory that a container can use. 
   - It's used to restrict the amount of CPU/Memory resources that a container can use.
   ```yaml
-  spec:
   containers:
   - name: webapp
     image: nginx:1.17
