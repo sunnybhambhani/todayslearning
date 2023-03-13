@@ -91,11 +91,11 @@ The following is a list of settings and configurations that can be implemented t
   - This helps to mitigate the risk of potential privilege escalation attacks on the containers.
   - Set the capabilities field to an empty object `{}` to remove all Linux capabilities from the container.
   ```yaml
-      containers:
-      - name: webapp
-        image: nginx:1.17
-        securityContext:
-          capabilities: {}
+  containers:
+  - name: webapp
+    image: nginx:1.17
+    securityContext:
+      capabilities: {}
   
   # Output trimmed
   ```
@@ -153,7 +153,7 @@ The following is a list of settings and configurations that can be implemented t
   - The settings `resources.requests.cpu` and `resources.requests.memory` specifies the `minimum` amount of CPU/Memory that a container should use. 
   - It's used to allocate the amount of CPU/Memory resources on the node for container.
   ```yaml
-    containers:
+  containers:
   - name: webapp
     image: nginx:1.17
     resources:
@@ -184,9 +184,9 @@ The following is a list of settings and configurations that can be implemented t
   - By doing this, it becomes difficult to determine which version of the image is in use and to roll back the version.
   - In below example we are specifying the tag as `1.17` for `nginx` image.
   ```yaml
-      containers:
-      - name: webapp
-        image: nginx:1.17
+  containers:
+  - name: webapp
+    image: nginx:1.17
 
   # Output trimmed
   ```
@@ -235,7 +235,6 @@ The following is a list of settings and configurations that can be implemented t
 >   - seLinuxOptions
 >   - seccompProfile
 >   - windowsOptions
-
 
 
 
