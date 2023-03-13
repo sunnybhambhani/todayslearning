@@ -26,6 +26,8 @@ Although Kubernetes is a powerful container orchestration system, its complexity
     name: webapp
   spec:
     replicas: 3
+  
+  # Output trimmed
   ```
 
 - image
@@ -36,6 +38,8 @@ Although Kubernetes is a powerful container orchestration system, its complexity
       containers:
       - name: webapp
         image: nginx:1.17
+
+  # Output trimmed
   ```
 
 - namespace
@@ -48,6 +52,8 @@ Although Kubernetes is a powerful container orchestration system, its complexity
     name: webapp
     namespace: frontend
   spec:
+  
+  # Output trimmed
   ```
 
 - securityContext.capabilities
@@ -60,6 +66,8 @@ Although Kubernetes is a powerful container orchestration system, its complexity
         image: nginx:1.17
         securityContext:
           capabilities: {}
+  
+  # Output trimmed
   ```
 
 
