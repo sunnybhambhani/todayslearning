@@ -232,4 +232,4 @@ The following is a list of settings and configurations that can be implemented t
 
 
 
-If there are any important configurations or use cases that I may have missed, please feel free to add them.
+If there are any important configurations or use cases that I may have missed from deployments perspective, please feel free to add them.
