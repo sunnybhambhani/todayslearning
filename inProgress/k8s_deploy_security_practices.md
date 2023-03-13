@@ -1,4 +1,12 @@
- ## Best Practices for Securing Kubernetes Deployments ##
+---
+layout: blog
+title: "Best Practices for Securing Kubernetes Deployments"
+date: 
+slug: best-practices-for-securing-k8s-deployments
+description: "Best practises for securing Kubernetes deployments and safeguarding applications and data against security threats."
+---
+
+## Best Practices for Securing Kubernetes Deployments ##
  
 Although Kubernetes is a powerful container orchestration system, its complexity makes it a prime target for security attacks. We'll go over some of the best practices for securing the Kubernetes deployments and keeping applications and data safe in this article.
 
