@@ -21,7 +21,7 @@ The following is a list of settings and configurations that can be implemented t
   ```
 
 - **securityContext.runAsNonRoot**
-  - The `securityContext.runAsNonRoot` setting is used to prevent containers from being run as the root user, which can be dangerous. 
+  - The `securityContext.runAsNonRoot` setting is used to prevent containers from being run as the `root` user, which can be dangerous. 
   - When `runAsNonRoot` is set to `true`, the container is started with a non-root user ID (UID) instead of the default root UID of 0.
   - The `securityContext` section is used in the following example to set `runAsNonRoot` to `true`. This means the container will be started with a non-root UID.
   - It's generally recommended to run containers as non-root whenever possible to reduce the risk of privilege escalation attacks. Keep in mind, however, that some applications may require root access to function properly.
@@ -99,7 +99,7 @@ The following is a list of settings and configurations that can be implemented t
   
 - **resources.requests.cpu**
 - **resources.requests.memory**
-  - The settings `resources.limits.cpu` and `resources.limits.memory` specifies the `minimum` amount of CPU/Memory that a container should use. 
+  - The settings `resources.requests.cpu` and `resources.requests.memory` specifies the `minimum` amount of CPU/Memory that a container should use. 
   - It's used to allocate the amount of CPU/Memory resources on the node for container.
   ```
     containers:
@@ -195,6 +195,7 @@ The following is a list of settings and configurations that can be implemented t
   ```
 
 > **_NOTE:_**  For more information around capabilities, fire `man capabilities`.
+>              There are many other securityContext options available, but these are the ones that are most commonly used.
 
 
 
