@@ -20,17 +20,96 @@ The following is a list of settings and configurations that can be implemented t
   # Output trimmed
   ```
 
-- securityContext.capabilities.drop
-- securityContext.runAsNonRoot
-- securityContext.readOnlyRootFilesystem
-- securityContext.runAsUser
-- securityContext.runAsGroup
-- securityContext.seccompProfile.type
-- resources.limits.cpu
-- resources.limits.memory
-- resources.requests.cpu
-- resources.requests.memory
+- **securityContext.runAsNonRoot**
+  - The `securityContext.runAsNonRoot` setting is used to prevent containers from being run as the root user, which can be dangerous. 
+  - When `runAsNonRoot` is set to `true`, the container is started with a non-root user ID (UID) instead of the default root UID of 0.
+  - The `securityContext` section is used in the following example to set `runAsNonRoot` to `true`. This means the container will be started with a non-root UID.
+  - It's generally recommended to run containers as non-root whenever possible to reduce the risk of privilege escalation attacks. Keep in mind, however, that some applications may require root access to function properly.
+  ```yaml
+  spec:
+  containers:
+  - name: webapp
+    image: nginx:1.17
+    securityContext:
+      runAsNonRoot: true
+  
+  # Output trimmed
+  ```
+  
+- **securityContext.readOnlyRootFilesystem**
+  - The `securityContext.readOnlyRootFilesystem` setting is used to prevent write access to a container's root filesystem. 
+  - When this setting is enabled and set to `true`, the container's root filesystem is mounted as read-only, resulting in a runtime error if any attempt to write to the root filesystem fails.
+  - Enabling this will for sure reduce the attack surface, However, keep in mind that this setting may not be appropriate for all containers, particularly those that require write access to the root filesystem to function properly.
+  ```yaml
+  spec:
+  containers:
+  - name: webapp
+    image: nginx:1.17
+    securityContext:
+      readOnlyRootFilesystem: true
+   
+  # Output trimmed
+  ```
+- **securityContext.runAsUser**
+  - The `securityContext.runAsUser` setting in Kubernetes is used to specify the user ID that should be used to run a container. 
+  - Containers are run as the `root` user by default, which can pose a security risk if an attacker gains access to the container.
+  - To reduce the risk of privilege escalation attacks, containers should be run as non-root users whenever possible.
+  - This configuration can be used at the pod and/or container levels; if set at the container level, it will override the pod's configuration.
+  ```
+  spec:
+  securityContext:
+    runAsUser: 1000
+  containers:
+  - name: webapp
+    image: nginx:1.17
+  
+  # Output trimmed
+  ```
+- **securityContext.runAsGroup**
+  - The `securityContext.runAsGroup` setting specifies the group ID under which the container's main process should run.
+  - - This configuration too can be used at the pod and/or container levels; if set at the container level, it will override the pod's configuration.
+  ```
+  spec:
+  containers:
+  - name: webapp
+    image: nginx:1.17
+    securityContext:
+      runAsGroup: 1000
+  
+  # Output trimmed
+  ```
 
+- **resources.limits.cpu**
+- **resources.limits.memory**
+  - The settings `resources.limits.cpu` and `resources.limits.memory` specifies the `maximum` amount of CPU/Memory that a container can use. 
+  - It's used to restrict the amount of CPU/Memory resources that a container can use.
+  ```
+  spec:
+  containers:
+  - name: webapp
+    image: nginx:1.17
+    resources:
+      limits:
+        cpu: "1"
+        memory: "512Mi"
+  
+  # Output trimmed
+  ```
+  
+  
+- **resources.requests.cpu**
+- **resources.requests.memory**
+  - The settings `resources.limits.cpu` and `resources.limits.memory` specifies the `minimum` amount of CPU/Memory that a container should use. 
+  - It's used to allocate the amount of CPU/Memory resources on the node for container.
+  ```
+    containers:
+  - name: webapp
+    image: nginx:1.17
+    resources:
+      requests:
+        cpu: "0.5"
+        memory: "256Mi"
+  ```
 
 - **replicas**
   - A replica is a duplicate of a pod that runs a single application. When you deploy an application in Kubernetes, you can use the `replicas` key to specify the number of replicas you want. 
