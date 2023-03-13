@@ -105,7 +105,7 @@ The following is a list of settings and configurations that can be implemented t
     securityContext:
       capabilities:
         add:
-        - SYS_ADMIN
+        - SYS_TIME
   
   # Output trimmed
   ```
@@ -120,7 +120,7 @@ The following is a list of settings and configurations that can be implemented t
     securityContext:
       capabilities:
         drop:
-        - SYS_TIME
+        - SYS_ADMIN
   
   # Output trimmed
   ```
