@@ -125,6 +125,10 @@ The following is a list of settings and configurations that can be implemented t
   # Output trimmed
   ```
 
+> **_NOTE:_**  
+> - For more information around capabilities, fire `man capabilities`.
+
+
 - **resources.limits.cpu**
 - **resources.limits.memory**
   - The settings `resources.limits.cpu` and `resources.limits.memory` specifies the `maximum` amount of CPU/Memory that a container can use. 
@@ -201,11 +205,10 @@ The following is a list of settings and configurations that can be implemented t
   ```
 
 
-
 > **_NOTE:_**  
-> - For more information around capabilities, fire `man capabilities`.
 > - There are many other securityContext options available, but these are the ones that are most commonly used.
-> - Just for reference here is the list of options which are accepted on pod layer (to know more about it fire `kubectl explain pod.spec.securityContext`):
+
+Just for reference here is the list of options which are accepted on pod layer (to know more about it fire `kubectl explain pod.spec.securityContext`):
 >   - fsGroup
 >   - fsGroupChangePolicy
 >   - runAsGroup
@@ -216,8 +219,8 @@ The following is a list of settings and configurations that can be implemented t
 >   - supplementalGroups
 >   - sysctls
 >   - windowsOptions
->
-> - And below are the ones which are accepted on container layer (to know more about it fire `kubectl explain pod.spec.containers.securityContext`):
+
+And below are the ones which are accepted on container layer (to know more about it fire `kubectl explain pod.spec.containers.securityContext`):
 >   - allowPrivilegeEscalation
 >   - capabilities
 >   - privileged
