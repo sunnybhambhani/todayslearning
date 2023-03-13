@@ -20,6 +20,7 @@ The following is a list of settings and configurations that can be implemented t
   # Output trimmed
   ```
 
+
 - **securityContext.runAsNonRoot**
   - The `securityContext.runAsNonRoot` setting is used to prevent containers from being run as the `root` user, which can be dangerous. 
   - When `runAsNonRoot` is set to `true`, the container is started with a non-root user ID (UID) instead of the default root UID of 0.
@@ -35,7 +36,8 @@ The following is a list of settings and configurations that can be implemented t
   
   # Output trimmed
   ```
-  
+
+
 - **securityContext.readOnlyRootFilesystem**
   - The `securityContext.readOnlyRootFilesystem` setting is used to prevent write access to a container's root filesystem. 
   - When this setting is enabled and set to `true`, the container's root filesystem is mounted as read-only, resulting in a runtime error if any attempt to write to the root filesystem fails.
@@ -50,6 +52,8 @@ The following is a list of settings and configurations that can be implemented t
    
   # Output trimmed
   ```
+
+
 - **securityContext.runAsUser**
   - The `securityContext.runAsUser` setting in Kubernetes is used to specify the user ID that should be used to run a container. 
   - Containers are run as the `root` user by default, which can pose a security risk if an attacker gains access to the container.
@@ -65,6 +69,8 @@ The following is a list of settings and configurations that can be implemented t
   
   # Output trimmed
   ```
+
+
 - **securityContext.runAsGroup**
   - The `securityContext.runAsGroup` setting specifies the group ID under which the container's main process should run.
   - - This configuration too can be used at the pod and/or container levels; if set at the container level, it will override the pod's configuration.
@@ -75,6 +81,51 @@ The following is a list of settings and configurations that can be implemented t
     image: nginx:1.17
     securityContext:
       runAsGroup: 1000
+  
+  # Output trimmed
+  ```
+  
+
+- **securityContext.capabilities**
+  - It is recommended that containers drop all capabilities, and only authorized or permitted ones should be added if necessary. 
+  - This helps to mitigate the risk of potential privilege escalation attacks on the containers.
+  - Set the capabilities field to an empty object `{}` to remove all Linux capabilities from the container.
+  ```yaml
+      containers:
+      - name: webapp
+        image: nginx:1.17
+        securityContext:
+          capabilities: {}
+  
+  # Output trimmed
+  ```
+  
+
+- **securityContext.capabilities.add**
+  - If required you can use `add` to specify specific capabilities.
+  ```yaml
+  containers:
+  - name: webapp
+    image: nginx:1.17
+    securityContext:
+      capabilities:
+        add:
+        - SYS_ADMIN
+  
+  # Output trimmed
+  ```
+
+
+- **securityContext.capabilities.drop**
+  - If required you can use `drop` to remove specific capabilities.
+  ```yaml
+  containers:
+  - name: webapp
+    image: nginx:1.17
+    securityContext:
+      capabilities:
+        drop:
+        - SYS_TIME
   
   # Output trimmed
   ```
@@ -111,6 +162,7 @@ The following is a list of settings and configurations that can be implemented t
         memory: "256Mi"
   ```
 
+
 - **replicas**
   - A replica is a duplicate of a pod that runs a single application. When you deploy an application in Kubernetes, you can use the `replicas` key to specify the number of replicas you want. 
   - This instructs Kubernetes on how many instances of the pod should be running at any given time.
@@ -126,6 +178,7 @@ The following is a list of settings and configurations that can be implemented t
   # Output trimmed
   ```
 
+
 - **image**
   - When deploying applications in production, the deployment or the pods should specify an `image` tag. It is best to avoid using the `:latest` image tag or no tag.
   - By doing this, it becomes difficult to determine which version of the image is in use and to roll back the version.
@@ -137,6 +190,7 @@ The following is a list of settings and configurations that can be implemented t
 
   # Output trimmed
   ```
+
 
 - **namespace**
   - Deployments should not be configured with the 'default' namespace; ensure that the `default` namespace is not used.
@@ -152,51 +206,9 @@ The following is a list of settings and configurations that can be implemented t
   # Output trimmed
   ```
 
-- **securityContext.capabilities**
-  - It is recommended that containers drop all capabilities, and only authorized or permitted ones should be added if necessary. 
-  - This helps to mitigate the risk of potential privilege escalation attacks on the containers.
-  - Set the capabilities field to an empty object `{}` to remove all Linux capabilities from the container.
-  ```yaml
-      containers:
-      - name: webapp
-        image: nginx:1.17
-        securityContext:
-          capabilities: {}
-  
-  # Output trimmed
-  ```
-  
-- **securityContext.capabilities.add**
-  - If required you can use `add` to specify specific capabilities.
-  ```yaml
-  containers:
-  - name: webapp
-    image: nginx:1.17
-    securityContext:
-      capabilities:
-        add:
-        - SYS_ADMIN
-  
-  # Output trimmed
-  ```
-
-- **securityContext.capabilities.drop**
-  - If required you can use `drop` to remove specific capabilities.
-  ```yaml
-  containers:
-  - name: webapp
-    image: nginx:1.17
-    securityContext:
-      capabilities:
-        drop:
-        - SYS_TIME
-  
-  # Output trimmed
-  ```
-
-> **_NOTE:_**  For more information around capabilities, fire `man capabilities`.
->              There are many other securityContext options available, but these are the ones that are most commonly used.
 
 
-
+> **_NOTE:_**  
+> - For more information around capabilities, fire `man capabilities`.
+> - There are many other securityContext options available, but these are the ones that are most commonly used.
 
