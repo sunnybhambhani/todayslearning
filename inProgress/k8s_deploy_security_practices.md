@@ -2,7 +2,7 @@
  
 Although Kubernetes is a powerful container orchestration system, its complexity makes it a prime target for security attacks. We'll go over some of the best practices for securing the Kubernetes deployments and keeping applications and data safe in this article.
 
-This article is only about pods or deployments; I intend to cover other topics in subsequent articles.
+This article is only about pods or deployments; I intend to cover other security related topics in subsequent articles.
 
 The following is a list of settings and configurations that can be implemented to accomplish the intended goal.
 
