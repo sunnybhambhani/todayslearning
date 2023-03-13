@@ -211,4 +211,31 @@ The following is a list of settings and configurations that can be implemented t
 > **_NOTE:_**  
 > - For more information around capabilities, fire `man capabilities`.
 > - There are many other securityContext options available, but these are the ones that are most commonly used.
+> - Just for reference here is the list of options which are accepted on pod layer (to know more about it fire `kubectl explain pod.spec.securityContext`):
+>   - fsGroup
+>   - fsGroupChangePolicy
+>   - runAsGroup
+>   - runAsNonRoot
+>   - runAsUser
+>   - seLinuxOptions
+>   - seccompProfile
+>   - supplementalGroups
+>   - sysctls
+>   - windowsOptions
+>
+> - And below are the ones which are accepted on container layer (to know more about it fire `kubectl explain pod.spec.containers.securityContext`):
+>   - allowPrivilegeEscalation
+>   - capabilities
+>   - privileged
+>   - procMount
+>   - readOnlyRootFilesystem
+>   - runAsGroup
+>   - runAsNonRoot
+>   - runAsUser
+>   - seLinuxOptions
+>   - seccompProfile
+>   - windowsOptions
+
+
+
 
