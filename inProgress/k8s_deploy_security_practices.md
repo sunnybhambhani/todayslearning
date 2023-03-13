@@ -82,9 +82,9 @@ The following is a list of settings and configurations that can be implemented t
   
 
 - **securityContext.capabilities**
-  - It is recommended that containers drop all capabilities, and only authorized or permitted ones should be added if necessary. 
+  - It is recommended that containers drop all `capabilities`, and only authorized or permitted ones should be added if necessary. 
   - This helps to mitigate the risk of potential privilege escalation attacks on the containers.
-  - Set the capabilities field to an empty object `{}` to remove all Linux capabilities from the container.
+  - Set the `capabilities` field to an empty object `{}` to remove all Linux capabilities from the container.
   ```yaml
   containers:
   - name: webapp
@@ -232,3 +232,4 @@ The following is a list of settings and configurations that can be implemented t
 
 
 
+If there are any important configurations or use cases that I may have missed, please feel free to add them.
