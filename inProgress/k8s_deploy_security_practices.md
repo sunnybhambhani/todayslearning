@@ -5,7 +5,7 @@ Although Kubernetes is a powerful container orchestration system, its complexity
 This article is only about pods or deployments; I intend to cover other security related topics in subsequent articles.
 
 The following is a list of settings and configurations that can be implemented to accomplish the intended goal.
-
+   
 - **securityContext.allowPrivilegeEscalation**
   - The `securityContext.allowPrivilegeEscalation` setting determines whether a container's privileges can be escalated. When `true`, it grants a container additional privileges beyond those granted by default.
   - Setting `allowPrivilegeEscalation` to `false` can help reduce the risk of privilege escalation attacks.
