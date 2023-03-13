@@ -55,7 +55,7 @@ The following is a list of settings and configurations that can be implemented t
   - Containers are run as the `root` user by default, which can pose a security risk if an attacker gains access to the container.
   - To reduce the risk of privilege escalation attacks, containers should be run as non-root users whenever possible.
   - This configuration can be used at the pod and/or container levels; if set at the container level, it will override the pod's configuration.
-  ```
+  ```yaml
   spec:
   securityContext:
     runAsUser: 1000
@@ -68,7 +68,7 @@ The following is a list of settings and configurations that can be implemented t
 - **securityContext.runAsGroup**
   - The `securityContext.runAsGroup` setting specifies the group ID under which the container's main process should run.
   - - This configuration too can be used at the pod and/or container levels; if set at the container level, it will override the pod's configuration.
-  ```
+  ```yaml
   spec:
   containers:
   - name: webapp
@@ -83,7 +83,7 @@ The following is a list of settings and configurations that can be implemented t
 - **resources.limits.memory**
   - The settings `resources.limits.cpu` and `resources.limits.memory` specifies the `maximum` amount of CPU/Memory that a container can use. 
   - It's used to restrict the amount of CPU/Memory resources that a container can use.
-  ```
+  ```yaml
   spec:
   containers:
   - name: webapp
@@ -101,7 +101,7 @@ The following is a list of settings and configurations that can be implemented t
 - **resources.requests.memory**
   - The settings `resources.requests.cpu` and `resources.requests.memory` specifies the `minimum` amount of CPU/Memory that a container should use. 
   - It's used to allocate the amount of CPU/Memory resources on the node for container.
-  ```
+  ```yaml
     containers:
   - name: webapp
     image: nginx:1.17
