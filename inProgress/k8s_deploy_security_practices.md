@@ -3,6 +3,19 @@
 Although Kubernetes is a powerful container orchestration system, its complexity makes it a prime target for security attacks. We'll go over some of the best practices for securing the Kubernetes deployments and keeping applications and data safe in this article.
 
 - securityContext.allowPrivilegeEscalation
+  - The securityContext.allowPrivilegeEscalation setting determines whether a container's privileges can be escalated. When true, it grants a container additional privileges beyond those granted by default.
+  - Setting allowPrivilegeEscalation to false can help reduce the risk of privilege escalation attacks.
+  ```
+  spec:
+  containers:
+  - name: webapp
+    image: nginx:1.17
+    securityContext:
+      allowPrivilegeEscalation: false
+  
+  # Output trimmed
+  ```
+
 - securityContext.capabilities.drop
 - securityContext.runAsNonRoot
 - securityContext.readOnlyRootFilesystem
@@ -69,8 +82,36 @@ Although Kubernetes is a powerful container orchestration system, its complexity
   
   # Output trimmed
   ```
+  
+- securityContext.capabilities.add
+  - If required you can use add to specify specific capabilities.
+  ```
+  containers:
+  - name: webapp
+    image: nginx:1.17
+    securityContext:
+      capabilities:
+        add:
+        - SYS_ADMIN
+  
+  # Output trimmed
+  ```
 
+- securityContext.capabilities.drop
+  - If required you can use drop to remove specific capabilities.
+  ```
+  containers:
+  - name: webapp
+    image: nginx:1.17
+    securityContext:
+      capabilities:
+        drop:
+        - SYS_TIME
+  
+  # Output trimmed
+  ```
 
+> **_NOTE:_**  For more information around capabilities, fire `man capabilities`.
 
 
 
