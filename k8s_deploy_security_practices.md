@@ -1,10 +1,10 @@
 ## Best Practices for Securing Kubernetes Deployments ##
  
-Although Kubernetes is a powerful container orchestration system, its complexity makes it a prime target for security attacks. We'll go over some of the best practices for securing the Kubernetes deployments and keeping applications and data safe in this article.
+Although Kubernetes is a powerful container orchestration platform, its complexity and its adoption makes it a prime target for security attacks. We'll go over some of the best practices for securing the Kubernetes deployments and keeping applications and data safe in this article.
 
-This article is only about pods or deployments; I intend to cover other security related topics in subsequent articles.
+_This article is only about pods or deployments; I intend to cover other security related topics in subsequent articles._
 
-The following is a list of settings and configurations that can be implemented to accomplish the intended goal.
+Below is a list of settings and configurations that can be implemented to accomplish the intended goal.
    
 - **securityContext.allowPrivilegeEscalation**
   - The `securityContext.allowPrivilegeEscalation` setting determines whether a container's privileges can be escalated. When `true`, it grants a container additional privileges beyond those granted by default.
@@ -39,7 +39,7 @@ The following is a list of settings and configurations that can be implemented t
 - **securityContext.readOnlyRootFilesystem**
   - The `securityContext.readOnlyRootFilesystem` setting is used to prevent write access to a container's root filesystem. 
   - When this setting is enabled and set to `true`, the container's root filesystem is mounted as read-only, resulting in a runtime error if any attempt to write to the root filesystem fails.
-  - Enabling this will for sure reduce the attack surface, However, keep in mind that this setting may not be appropriate for all containers, particularly those that require write access to the root filesystem to function properly.
+  - Enabling this will for sure reduce the attack surface, However, do keep in mind that this setting may not be appropriate for all containers/applications, particularly those that require write access to the root filesystem to function properly.
   ```yaml
   containers:
   - name: webapp
@@ -69,7 +69,7 @@ The following is a list of settings and configurations that can be implemented t
 
 - **securityContext.runAsGroup**
   - The `securityContext.runAsGroup` setting specifies the group ID under which the container's main process should run.
-  - - This configuration too can be used at the pod and/or container levels; if set at the container level, it will override the pod's configuration.
+  - This configuration too can be used at the pod and/or container levels; if set at the container level, it will override the pod's configuration.
   ```yaml
   containers:
   - name: webapp
@@ -236,3 +236,8 @@ And below are the ones which are accepted on container layer (to know more about
 
 
 If there are any important configurations or use cases that I may have missed from deployments perspective, please feel free to add them.
+
+References:
+- https://kubernetes.io/docs/home/
+- Linux man pages.
+- Documentation from `kubectl explain` command.
