@@ -25,3 +25,4 @@ Here are some recommendations for optimal practises:
 - **Container registry:** To store and distribute your application images, use a container registry. This can make it simpler to manage changes and rollbacks and assist ensure consistent and dependable deployments.
 - **Monitoring and logging:** To monitor the operation of your application and resolve problems, use logging and monitoring tools. You can visualise the performance of your application and spot possible issues before they become serious with the aid of tools like Prometheus and Grafana.
 - **CI/CD:** For deployment automation, use a continuous integration and delivery (CI/CD) pipeline. By doing this, you may increase consistency and lower the possibility of deployment mistakes.
+#
