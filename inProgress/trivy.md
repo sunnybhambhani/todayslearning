@@ -1,10 +1,12 @@
 ## trivy ##
 
-It is critical to scan for vulnerabilities, and there are numerous tools and utilities available today, my favourite of which is Trivy.
+It is crucial to scan for vulnerabilities, and there are numerous tools and utilities available, and `Trivy` is one of the most convinient tool to help you with this.
 
-Trivy is a command-line vulnerability scanner that can do much more than simply scan containers or Docker images. It can help you scan your config files for errors, scan the filesystem, scan your local and remote repositories, and, most importantly, scan your K8s cluster (though this is an experimental feature as of this writing).
+Trivy is a command-line vulnerability scanner that can do much more than simply scan images. It can help you scan your config files for errors, scan the filesystem, scan your local and remote repositories, and, most importantly, scan your K8s cluster (though this is an experimental feature as of this writing).
 
-Just a quick overview of Trivy. It is intended to quickly and easily detect known vulnerabilities in your platform, and it can be integrated into your CI/CD pipeline to ensure that vulnerabilities are discovered and addressed early in the development process. It is free and open-source software that can run on a variety of operating systems such as Linux, macOS, and Windows.
+It's installation is pretty straight forward, ref. https://aquasecurity.github.io/trivy/v0.18.3/installation/ for more details.
+
+Just a quick overview of Trivy. It is intended to quickly and easily detect known vulnerabilities in your platform, and it can be integrated into your CI/CD pipeline to ensure that vulnerabilities are discovered and addressed early in the development process. It is a free and open-source software that can run on a variety of operating systems such as Linux, macOS, and Windows.
 
 Though running trivy is simple and only requires one command, one frequently asked question is how trivy works. To give you a quick overview, trivy follows the following process in the backend:
 - First comes `image scanning`, Trivy starts by scanning the container image layer by layer. It examines the filesystem, installed packages and libraries.
@@ -61,7 +63,7 @@ Output trimmed, Expected output is a list of all vulnerabilities in the format s
 
 ```
 
-- Scan a local directory: `trivy filesystem FS_PATH`, here I have kept a test private key in my /tmp directory just for testing purposes.
+- Scan a local directory: `trivy filesystem FS_PATH`, here I have intentionally kept a test `private key` in my /tmp directory just for testing purposes.
 ```
 $ trivy filesystem /tmp
 2023-03-09T16:08:26.699+0530	INFO	Vulnerability scanning is enabled
@@ -158,5 +160,29 @@ Output trimmed.
 ```
 
 Note:
-- When Trivy first starts up, it downloads its vulnerability database every 12 hours.
+- When Trivy first starts up, it downloads its vulnerability database then it renews it roughly every 12 hours.
 - Usually the process is pretty fast, since the database is pretty light weight, but if need be this can be skipped as well by using `--skip-update` option while running the scan.
+
+
+References: 
+- https://aquasecurity.github.io/trivy/v0.18.3/installation/
+- https://github.com/aquasecurity/trivy
+- `trivy --help`, there are plenty of subcommands available for trivy, here is a list of them which is fetched from mentioned command:
+  ```
+  Available Commands:
+  aws         [EXPERIMENTAL] Scan AWS account
+  completion  Generate the autocompletion script for the specified shell
+  config      Scan config files for misconfigurations
+  filesystem  Scan local filesystem
+  help        Help about any command
+  image       Scan a container image
+  kubernetes  [EXPERIMENTAL] Scan kubernetes cluster
+  module      Manage modules
+  plugin      Manage plugins
+  repository  Scan a remote repository
+  rootfs      Scan rootfs
+  sbom        Scan SBOM for vulnerabilities
+  server      Server mode
+  version     Print the version
+  vm          [EXPERIMENTAL] Scan a virtual machine image
+  ```
