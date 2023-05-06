@@ -77,5 +77,3 @@ STATUS: deployed
 REVISION: 1
 TEST SUITE: None
 ```
-
-[Feel free to connect over LinkedIn :)](https://www.linkedin.com/in/sunnybhambhani/)
