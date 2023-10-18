@@ -11,9 +11,9 @@ In this article, we will go over some of the less well-known or easily overlooke
 
 ### Pod Disruption Budget
 
-Before we dive more into this topic, lets first understand what exactly is disruption?
+Before we dive more into this topic, lets first understand what exactly disruption is?
 
-#### What is disruption?
+#### Disruption?
 
 In the context of Kubernetes, a disruption refers to a planned or unplanned event that causes a pod to become unavailable for some amount of time. A disruption can happen for many reasons, it can be voluntary or involuntary such as:
 - Node maintenance: Any pods that are currently running on a node may become momentarily inaccessible when that node must be brought down for maintenance, such as to apply security updates or hardware upgrades.
