@@ -47,3 +47,74 @@ spec:
 - `spec`, The specifics of the PodDisruptionBudget are described in this section. The minAvailable key is set to 2 in this example, indicating that there must always be two pods available. Also, a selection is being used to match the labels of the pods covered by this PDB. Here, we are matching the pods in this instance to the label app: test-app.
 
 In this example PDB makes sure that there are always two pods with the label "app: test-app" available.
+
+Hands-on example:
+
+```bash
+$ k get nodes
+NAME           STATUS   ROLES           AGE   VERSION
+minikube       Ready    control-plane   98s   v1.26.3
+minikube-m02   Ready    <none>          55s   v1.26.3
+minikube-m03   Ready    <none>          17s   v1.26.3
+```
+
+```bash
+$ k get pods -o wide
+NAME                      READY   STATUS    RESTARTS   AGE   IP           NODE           NOMINATED NODE   READINESS GATES
+webapp-645ff4bbd4-cq9rv   1/1     Running   0          37s   10.244.1.4   minikube-m02   <none>           <none>
+webapp-645ff4bbd4-gmm9c   1/1     Running   0          36s   10.244.0.4   minikube       <none>           <none>
+webapp-645ff4bbd4-wlvkb   1/1     Running   0          39s   10.244.2.4   minikube-m03   <none>           <none>
+```
+
+```bash
+$ k get pods --show-labels
+NAME                      READY   STATUS    RESTARTS   AGE    LABELS
+webapp-645ff4bbd4-cq9rv   1/1     Running   0          119s   app=webapp,pod-template-hash=645ff4bbd4
+webapp-645ff4bbd4-gmm9c   1/1     Running   0          118s   app=webapp,pod-template-hash=645ff4bbd4
+webapp-645ff4bbd4-wlvkb   1/1     Running   0          2m1s   app=webapp,pod-template-hash=645ff4bbd4
+```
+
+```bash
+$ k get pdb -w
+NAME         MIN AVAILABLE   MAX UNAVAILABLE   ALLOWED DISRUPTIONS   AGE
+webapp-pdb   2               N/A               1                     72s
+```
+
+```bash
+webapp-pdb   2               N/A               0                     4m14s
+```
+
+```bash
+$ k drain minikube-m03 --ignore-daemonsets --force
+node/minikube-m03 cordoned
+Warning: ignoring DaemonSet-managed Pods: kube-system/kindnet-52xqd, kube-system/kube-proxy-sl2nk
+evicting pod kube-system/coredns-787d4945fb-6xszs
+evicting pod default/webapp-645ff4bbd4-wfkx2
+evicting pod default/webapp-645ff4bbd4-wlvkb
+evicting pod default/webapp-645ff4bbd4-m5m78
+error when evicting pods/"webapp-645ff4bbd4-m5m78" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
+error when evicting pods/"webapp-645ff4bbd4-wfkx2" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
+pod/webapp-645ff4bbd4-wlvkb evicted
+evicting pod default/webapp-645ff4bbd4-m5m78
+error when evicting pods/"webapp-645ff4bbd4-m5m78" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
+evicting pod default/webapp-645ff4bbd4-wfkx2
+error when evicting pods/"webapp-645ff4bbd4-wfkx2" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
+pod/coredns-787d4945fb-6xszs evicted
+evicting pod default/webapp-645ff4bbd4-m5m78
+error when evicting pods/"webapp-645ff4bbd4-m5m78" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
+evicting pod default/webapp-645ff4bbd4-wfkx2
+error when evicting pods/"webapp-645ff4bbd4-wfkx2" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
+evicting pod default/webapp-645ff4bbd4-m5m78
+error when evicting pods/"webapp-645ff4bbd4-m5m78" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
+evicting pod default/webapp-645ff4bbd4-wfkx2
+error when evicting pods/"webapp-645ff4bbd4-wfkx2" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
+evicting pod default/webapp-645ff4bbd4-m5m78
+```
+
+```bash
+$ k get pods -o wide
+NAME                      READY   STATUS    RESTARTS   AGE     IP           NODE           NOMINATED NODE   READINESS GATES
+webapp-645ff4bbd4-7c8r2   0/1     Pending   0          103s    <none>       <none>         <none>           <none>
+webapp-645ff4bbd4-m5m78   1/1     Running   0          2m1s    10.244.2.7   minikube-m03   <none>           <none>
+webapp-645ff4bbd4-wfkx2   1/1     Running   0          2m35s   10.244.2.5   minikube-m03   <none>           <none>
+```
