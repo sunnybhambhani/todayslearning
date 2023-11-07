@@ -8,6 +8,7 @@ In this article, we will go over some of the less well-known or easily overlooke
 - Taints and Tolerations
 - Init Containers
 - Pod Security Admission
+- Pod priority and preemption (More information around this can be found in my previous article: https://kubernetes.io/blog/2023/01/12/protect-mission-critical-pods-priorityclass/)
 
 ### Pod Disruption Budget
 
