@@ -45,11 +45,36 @@ spec:
 - `apiVersion` and `kind`, These two attributes, indicate the Kubernetes API version and the type of object being generated, a PodDisruptionBudget.
 - `metadata`, This part includes the object's metadata, such as its name.
 - `spec`, The specifics of the PodDisruptionBudget are described in this section. The minAvailable key is set to 2 in this example, indicating that there must always be two pods available. Also, a selection is being used to match the labels of the pods covered by this PDB. Here, we are matching the pods in this instance to the label app: test-app.
+- Below is the key value pairs available in spec section (Reference: `kubectl explain pdb.spec` command).
+```bash
+  maxUnavailable        <IntOrString>
+    An eviction is allowed if at most "maxUnavailable" pods selected by
+    "selector" are unavailable after the eviction, i.e. even in absence of the
+    evicted pod. For example, one can prevent all voluntary evictions by
+    specifying 0. This is a mutually exclusive setting with "minAvailable".
+
+  minAvailable  <IntOrString>
+    An eviction is allowed if at least "minAvailable" pods selected by
+    "selector" will still be available after the eviction, i.e. even in the
+    absence of the evicted pod.  So for example you can prevent all voluntary
+    evictions by specifying "100%".
+
+  selector      <LabelSelector>
+    Label query over pods whose evictions are managed by the disruption budget.
+    A null selector will match no pods, while an empty ({}) selector will select
+    all pods within the namespace.
+```
+
+> **_NOTE:_**  Either we can use `minAvailable` or `maxUnavailable`. If you are trying to use both of them it will fail with an error similar to this one.
+> ```bash
+> The PodDisruptionBudget "xyz-pdb" is invalid: spec: Invalid value: policy.PodDisruptionBudgetSpec{MinAvailable:(*intstr.IntOrString)(0xc00efdb120), Selector:(*v1.LabelSelector)(0xc00efdb140), MaxUnavailable:(*intstr.IntOrString)(0xc00efdb160), UnhealthyPodEvictionPolicy:(*policy.UnhealthyPodEvictionPolicyType)(nil)}: minAvailable and maxUnavailable cannot be both set
+> ```
 
 In this example PDB makes sure that there are always two pods with the label "app: test-app" available.
 
-Hands-on example:
+Below is a practical implementation covering PodDisruptionBudget:
 
+- Here I have a minikube cluster with 3 nodes:
 ```bash
 $ k get nodes
 NAME           STATUS   ROLES           AGE   VERSION
@@ -58,6 +83,8 @@ minikube-m02   Ready    <none>          55s   v1.26.3
 minikube-m03   Ready    <none>          17s   v1.26.3
 ```
 
+- In addition, this cluster has a web-application deployed with 3 replicas.
+- Plus every pod runs on a different node.
 ```bash
 $ k get pods -o wide
 NAME                      READY   STATUS    RESTARTS   AGE   IP           NODE           NOMINATED NODE   READINESS GATES
@@ -66,6 +93,7 @@ webapp-645ff4bbd4-gmm9c   1/1     Running   0          36s   10.244.0.4   miniku
 webapp-645ff4bbd4-wlvkb   1/1     Running   0          39s   10.244.2.4   minikube-m03   <none>           <none>
 ```
 
+- Just like in other k8s resources, labels are used here as well; in this case its app=webapp.
 ```bash
 $ k get pods --show-labels
 NAME                      READY   STATUS    RESTARTS   AGE    LABELS
@@ -74,6 +102,20 @@ webapp-645ff4bbd4-gmm9c   1/1     Running   0          118s   app=webapp,pod-tem
 webapp-645ff4bbd4-wlvkb   1/1     Running   0          2m1s   app=webapp,pod-template-hash=645ff4bbd4
 ```
 
+- As described earlier, I have used the same template for creating a PodDisruptionBudget resource for this example.
+```yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: webapp-pdb
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: webapp
+```
+
+- 
 ```bash
 $ k get pdb -w
 NAME         MIN AVAILABLE   MAX UNAVAILABLE   ALLOWED DISRUPTIONS   AGE
