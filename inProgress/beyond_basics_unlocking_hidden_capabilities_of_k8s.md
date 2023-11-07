@@ -45,7 +45,7 @@ spec:
 - `apiVersion` and `kind`, These two attributes, indicate the Kubernetes API version and the type of object being generated, a PodDisruptionBudget.
 - `metadata`, This part includes the object's metadata, such as its name.
 - `spec`, The specifics of the PodDisruptionBudget are described in this section. The minAvailable key is set to 2 in this example, indicating that there must always be two pods available. Also, a selection is being used to match the labels of the pods covered by this PDB. Here, we are matching the pods in this instance to the label app: test-app.
-- Below is the key value pairs available in spec section (Reference: `kubectl explain pdb.spec` command).
+- Below are the key value pairs available in `.spec` section (**Reference:** `kubectl explain pdb.spec` command).
 ```bash
   maxUnavailable        <IntOrString>
     An eviction is allowed if at most "maxUnavailable" pods selected by
@@ -65,7 +65,7 @@ spec:
     all pods within the namespace.
 ```
 
-> **_NOTE:_**  Either we can use `minAvailable` or `maxUnavailable`. If you are trying to use both of them it will fail with an error similar to this one.
+> **_NOTE:_**  We can either use `minAvailable` or `maxUnavailable`. If you try to use both of them, you will receive an error similar to this one.
 > ```bash
 > The PodDisruptionBudget "xyz-pdb" is invalid: spec: Invalid value: policy.PodDisruptionBudgetSpec{MinAvailable:(*intstr.IntOrString)(0xc00efdb120), Selector:(*v1.LabelSelector)(0xc00efdb140), MaxUnavailable:(*intstr.IntOrString)(0xc00efdb160), UnhealthyPodEvictionPolicy:(*policy.UnhealthyPodEvictionPolicyType)(nil)}: minAvailable and maxUnavailable cannot be both set
 > ```
@@ -115,22 +115,25 @@ spec:
       app: webapp
 ```
 
-- 
+- Point to note here is **"ALLOWED DISRUPTIONS"**. We have 3 pods in the replicaset, minimum 2 should be up and running at all times and only 1 is allowed to be evicted in event of disruptions. 
 ```bash
 $ k get pdb -w
 NAME         MIN AVAILABLE   MAX UNAVAILABLE   ALLOWED DISRUPTIONS   AGE
 webapp-pdb   2               N/A               1                     72s
 ```
 
+- For the sake of creating artifical disruption, I tried draining the nodes one by one.
+- What's interesting here is that the allowed disruption is now 0.
 ```bash
+NAME         MIN AVAILABLE   MAX UNAVAILABLE   ALLOWED DISRUPTIONS   AGE
 webapp-pdb   2               N/A               0                     4m14s
 ```
 
+- And another interesting thing is when I tried draining the last/3rd node it started giving me an error as _**"error when evicting pods/"webapp-645ff4bbd4-m5m78" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget."**_ and it blocked my shell from where I ran the drain command.
 ```bash
 $ k drain minikube-m03 --ignore-daemonsets --force
 node/minikube-m03 cordoned
 Warning: ignoring DaemonSet-managed Pods: kube-system/kindnet-52xqd, kube-system/kube-proxy-sl2nk
-evicting pod kube-system/coredns-787d4945fb-6xszs
 evicting pod default/webapp-645ff4bbd4-wfkx2
 evicting pod default/webapp-645ff4bbd4-wlvkb
 evicting pod default/webapp-645ff4bbd4-m5m78
@@ -144,15 +147,9 @@ error when evicting pods/"webapp-645ff4bbd4-wfkx2" -n "default" (will retry afte
 pod/coredns-787d4945fb-6xszs evicted
 evicting pod default/webapp-645ff4bbd4-m5m78
 error when evicting pods/"webapp-645ff4bbd4-m5m78" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
-evicting pod default/webapp-645ff4bbd4-wfkx2
-error when evicting pods/"webapp-645ff4bbd4-wfkx2" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
-evicting pod default/webapp-645ff4bbd4-m5m78
-error when evicting pods/"webapp-645ff4bbd4-m5m78" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
-evicting pod default/webapp-645ff4bbd4-wfkx2
-error when evicting pods/"webapp-645ff4bbd4-wfkx2" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
-evicting pod default/webapp-645ff4bbd4-m5m78
 ```
 
+- Now, if you will observe (from the second shell) our application is still running with 2 replicas. 
 ```bash
 $ k get pods -o wide
 NAME                      READY   STATUS    RESTARTS   AGE     IP           NODE           NOMINATED NODE   READINESS GATES
@@ -160,3 +157,7 @@ webapp-645ff4bbd4-7c8r2   0/1     Pending   0          103s    <none>       <non
 webapp-645ff4bbd4-m5m78   1/1     Running   0          2m1s    10.244.2.7   minikube-m03   <none>           <none>
 webapp-645ff4bbd4-wfkx2   1/1     Running   0          2m35s   10.244.2.5   minikube-m03   <none>           <none>
 ```
+
+As you can see in this example, PodDisruptionBudget ensures that our intended replicas are always up and running, even during disruptions.
+
+
