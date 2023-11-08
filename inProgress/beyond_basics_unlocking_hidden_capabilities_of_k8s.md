@@ -179,3 +179,7 @@ References:
 - `kubectl explain` command.
 
 
+There are numerous features/concepts like this that can greatly assist us in making our applications more resilient and robust.
+
+If you have any queries or feedback, feel free to reach out to me on LinkedIn (https://www.linkedin.com/in/sunnybhambhani/)
+
