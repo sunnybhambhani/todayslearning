@@ -5,7 +5,6 @@ Kubernetes has been widely adopted, and many organizations use it as their de-fa
 In this article, we will go over some of the less well-known or easily overlooked (but critical) features of Kuberentes.
 
 - Pod Disruption Budget
-- Taints and Tolerations
 - Init Containers
 - Pod Security Admission
 - Pod priority and preemption (More information around this can be found in my previous article: https://kubernetes.io/blog/2023/01/12/protect-mission-critical-pods-priorityclass/)
@@ -159,5 +158,24 @@ webapp-645ff4bbd4-wfkx2   1/1     Running   0          2m35s   10.244.2.5   mini
 ```
 
 As you can see in this example, PodDisruptionBudget ensures that our intended replicas are always up and running, even during disruptions.
+
+
+### Init Containers
+
+This is a very interesting concept in Kubernetes, and I have used it a couple of times in various implementations.
+- The main purpose of `initContainers` is to run before the main application container, lets say if the application container is dependent on some other jobs/functions/scripts to run and that is only required during the startup of the application container, there initContainers are used.
+- Another thing to keep in mind is that once the job/function/script is completed successfully (the exit code should be 0), this container is terminated, freeing up resources and then only the application container is started.
+- If this initContainer fails, the application container will not start; therefore, we must use this with caution.
+- Like containers, this is also an array in the pod/deployment manifest file, so we can run as many supporting initContainers prior to the application starting.
+- Furthermore, because the initContainers (array items) will execute one after the other, their order is important.
+
+
+
+
+References:
+- https://kubernetes.io/blog/2023/01/12/protect-mission-critical-pods-priorityclass
+- https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
+- https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+- `kubectl explain` command.
 
 
