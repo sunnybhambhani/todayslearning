@@ -45,6 +45,7 @@ spec:
 - `metadata`, This part includes the object's metadata, such as its name.
 - `spec`, The specifics of the PodDisruptionBudget are described in this section. The minAvailable key is set to 2 in this example, indicating that there must always be two pods available. Also, a selection is being used to match the labels of the pods covered by this PDB. Here, we are matching the pods in this instance to the label app: test-app.
 - Below are the key value pairs available in `.spec` section (**Reference:** `kubectl explain pdb.spec` command).
+
 ```bash
   maxUnavailable        <IntOrString>
     An eviction is allowed if at most "maxUnavailable" pods selected by
@@ -74,6 +75,7 @@ In this example PDB makes sure that there are always two pods with the label "ap
 Below is a practical implementation covering PodDisruptionBudget:
 
 - Here I have a minikube cluster with 3 nodes:
+
 ```bash
 $ k get nodes
 NAME           STATUS   ROLES           AGE   VERSION
@@ -84,6 +86,7 @@ minikube-m03   Ready    <none>          17s   v1.26.3
 
 - In addition, this cluster has a web-application deployed with 3 replicas.
 - Plus every pod runs on a different node.
+
 ```bash
 $ k get pods -o wide
 NAME                      READY   STATUS    RESTARTS   AGE   IP           NODE           NOMINATED NODE   READINESS GATES
@@ -93,6 +96,7 @@ webapp-645ff4bbd4-wlvkb   1/1     Running   0          39s   10.244.2.4   miniku
 ```
 
 - Just like in other k8s resources, labels are used here as well; in this case its app=webapp.
+
 ```bash
 $ k get pods --show-labels
 NAME                      READY   STATUS    RESTARTS   AGE    LABELS
@@ -102,6 +106,7 @@ webapp-645ff4bbd4-wlvkb   1/1     Running   0          2m1s   app=webapp,pod-tem
 ```
 
 - As described earlier, I have used the same template for creating a PodDisruptionBudget resource for this example.
+
 ```yaml
 apiVersion: policy/v1
 kind: PodDisruptionBudget
@@ -114,7 +119,8 @@ spec:
       app: webapp
 ```
 
-- Point to note here is **"ALLOWED DISRUPTIONS"**. We have 3 pods in the replicaset, minimum 2 should be up and running at all times and only 1 is allowed to be evicted in event of disruptions. 
+- Point to note here is **"ALLOWED DISRUPTIONS"**. We have 3 pods in the replicaset, minimum 2 should be up and running at all times and only 1 is allowed to be evicted in event of disruptions.
+
 ```bash
 $ k get pdb -w
 NAME         MIN AVAILABLE   MAX UNAVAILABLE   ALLOWED DISRUPTIONS   AGE
@@ -123,12 +129,14 @@ webapp-pdb   2               N/A               1                     72s
 
 - For the sake of creating artifical disruption, I tried draining the nodes one by one.
 - What's interesting here is that the allowed disruption is now 0.
+
 ```bash
 NAME         MIN AVAILABLE   MAX UNAVAILABLE   ALLOWED DISRUPTIONS   AGE
 webapp-pdb   2               N/A               0                     4m14s
 ```
 
 - And another interesting thing is when I tried draining the last/3rd node it started giving me an error as _**"error when evicting pods/"webapp-645ff4bbd4-m5m78" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget."**_ and it blocked my shell from where I ran the drain command.
+
 ```bash
 $ k drain minikube-m03 --ignore-daemonsets --force
 node/minikube-m03 cordoned
@@ -148,7 +156,8 @@ evicting pod default/webapp-645ff4bbd4-m5m78
 error when evicting pods/"webapp-645ff4bbd4-m5m78" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
 ```
 
-- Now, if you will observe (from the second shell) our application is still running with 2 replicas. 
+- Now, if you will observe (from the second shell) our application is still running with 2 replicas.
+
 ```bash
 $ k get pods -o wide
 NAME                      READY   STATUS    RESTARTS   AGE     IP           NODE           NOMINATED NODE   READINESS GATES
@@ -160,15 +169,19 @@ webapp-645ff4bbd4-wfkx2   1/1     Running   0          2m35s   10.244.2.5   mini
 As you can see in this example, PodDisruptionBudget ensures that our intended replicas are always up and running, even during disruptions.
 
 
+
 ### Init Containers
 
 This is a very interesting concept in Kubernetes, and I have used it a couple of times in various implementations.
-- The main purpose of `initContainers` is to run before the main application container, lets say if the application container is dependent on some other jobs/functions/scripts to run and that is only required during the startup of the application container, there initContainers are used.
+- The main purpose of `initContainers` is to run before the main application container, let's say if the application container is dependent on some other jobs/functions/scripts to run and that is only required during the startup of the application container, there `initContainers` are used.
 - Another thing to keep in mind is that once the job/function/script is completed successfully (the exit code should be 0), this container is terminated, freeing up resources and then only the application container is started.
 - If this initContainer fails, the application container will not start; therefore, we must use this with caution.
 - Like containers, this is also an array in the pod/deployment manifest file, so we can run as many supporting initContainers prior to the application starting.
-- Furthermore, because the initContainers (array items) will execute one after the other, their order is important.
+- Furthermore, because the `initContainers` (array items) will execute one after the other, their order is important.
+- Point to note is initContainers doesn't support `lifecycle`, `livenessProbe`, `readinessProbe`, `startupProbe` reason being they must run to completion.
 
+Before we dive in a practical implementation covering initContainers, let's see where we can use them:
+- 
 
 
 
