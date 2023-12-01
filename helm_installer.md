@@ -1,0 +1,124 @@
+Helm is really a very powerful tool for managing Kubernetes objects and is widely adopted across all kinds of organizations. It is truely a game changer on how Kubernetes objects are being managed. 
+
+With a single command we can install or upgrade multiple related Kubernetes entities together, we need not to worry about how the resources will be created, Helm will do all the heavy lifting for us.
+
+```bash
+$ helm install [RELEASE_NAME] [REPO]/[CHART]
+```
+
+But below post is not about the basics of helm or how to install or upgrade a chart, etc. It's about some new ways of getting charts deployed.
+
+Let's say you have a requirement for getting more than 100 charts installed on a specific k8s cluster, what would you do in this scenario?
+
+On top of my head I can think of couple of approaches:
+
+### Approach 1:
+Club interrelated charts into one, as in get a parent/wrapper chart created which will inturn have the related child charts as dependency. Which mean if we install the parent/wrapper chart it will get all the Kubernetes resources of all the child charts deployed (provided they are marked as enabled in Chart.yaml).
+
+Below is a quick example, wherein I have a 3-Tier application named app01.
+- If you notice the output of both the commands in parent's Chart.yaml I have all three charts listed as dependencies and in the other one, individual charts have its own Kubernetes resources.
+
+```bash
+$ cat Chart.yaml
+apiVersion: v2
+name: app01
+description: A Helm chart is for app01 which contains FE, BE, DB.
+version: 0.1.0
+appVersion: 1.0.0
+dependencies:
+  - name: webapp
+    version: "0.1.0"
+    repository: "file://./charts/webapp"
+    enabled: true
+  - name: backend
+    version: "0.1.0"
+    repository: "file://./charts/backend"
+    enabled: true
+  - name: database
+    version: "0.1.0"
+    repository: "file://./charts/database"
+```
+
+```bash
+$ tree
+.
+├── Chart.yaml
+├── charts
+│   ├── backend
+│   │   ├── Chart.yaml
+│   │   ├── charts
+│   │   ├── templates
+│   │   │   ├── _helpers.tpl
+│   │   │   ├── deployment.yaml
+│   │   │   ├── hpa.yaml
+│   │   │   ├── ingress.yaml
+│   │   │   ├── service.yaml
+│   │   │   └── serviceaccount.yaml
+│   │   └── values.yaml
+│   ├── database
+│   │   ├── Chart.yaml
+│   │   ├── charts
+│   │   ├── templates
+│   │   │   ├── _helpers.tpl
+│   │   │   ├── deployment.yaml
+│   │   │   ├── hpa.yaml
+│   │   │   ├── ingress.yaml
+│   │   │   ├── service.yaml
+│   │   │   └── serviceaccount.yaml
+│   │   └── values.yaml
+│   └── webapp
+│       ├── Chart.yaml
+│       ├── charts
+│       ├── templates
+│       │   ├── _helpers.tpl
+│       │   ├── deployment.yaml
+│       │   ├── hpa.yaml
+│       │   ├── ingress.yaml
+│       │   ├── service.yaml
+│       │   └── serviceaccount.yaml
+│       └── values.yaml
+└── values.yaml
+
+10 directories, 26 files
+```
+
+- When we will install the parent chart it will get all the Kubernetes resources deployed.
+
+```bash
+$ helm install app01 ./app01/
+NAME: app01
+LAST DEPLOYED: Sat Dec  2 00:14:50 2023
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+```
+```bash
+$ helm list -A
+NAME    NAMESPACE       REVISION        UPDATED                                 STATUS          CHART           APP VERSION
+app01   default         1               2023-12-02 00:14:50.075444065 +0530 IST deployed        app01-0.1.0     1.0.0
+```
+```bash
+$ k get all
+NAME                                  READY   STATUS    RESTARTS   AGE
+pod/app01-backend-965cb9b5b-q7gqv     1/1     Running   0          17m
+pod/app01-database-56bdbcd49c-bh4s2   1/1     Running   0          17m
+pod/app01-webapp-5b67db8bdf-m6psg     1/1     Running   0          17m
+
+NAME                     TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
+service/app01-backend    ClusterIP   10.107.53.8      <none>        80/TCP    17m
+service/app01-database   ClusterIP   10.104.173.124   <none>        80/TCP    17m
+service/app01-webapp     ClusterIP   10.111.168.18    <none>        80/TCP    17m
+service/kubernetes       ClusterIP   10.96.0.1        <none>        443/TCP   8d
+
+NAME                             READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/app01-backend    1/1     1            1           17m
+deployment.apps/app01-database   1/1     1            1           17m
+deployment.apps/app01-webapp     1/1     1            1           17m
+
+NAME                                        DESIRED   CURRENT   READY   AGE
+replicaset.apps/app01-backend-965cb9b5b     1         1         1       17m
+replicaset.apps/app01-database-56bdbcd49c   1         1         1       17m
+replicaset.apps/app01-webapp-5b67db8bdf     1         1         1       17m
+```
+
+- As you see here with a single command we deployed multiple helm charts.
