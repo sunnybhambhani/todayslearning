@@ -12,11 +12,34 @@ If you haven't read the previous article where I discussed about `Approach 1`, f
   - Ref: https://github.com/helmfile/helmfile
 
 
+Installation of helmfile is pretty straight forward, we just need to grab its binary and put that in /usr/local/bin and we are done (Ref: https://helmfile.readthedocs.io/en/latest/#installation for operating system other than linux).
+
+```bash
+# Grab the latest one from the assets section from here: https://github.com/helmfile/helmfile/releases
+
+sudo wget https://github.com/helmfile/helmfile/releases/download/v0.159.0/helmfile_0.159.0_linux_amd64.tar.gz
+sudo tar -xxf helmfile_0.159.0_linux_amd64.tar.gz
+sudo rm helmfile_0.159.0_linux_amd64.tar.gz
+sudo mv helmfile /usr/local/bin/
+```
+
+```bash
+# Once helmfile is installed, we need initialize it so that it can download necessary helm plugins.
+
+helmfile init
+```
+
+> #### Note: A notice to upgrade helm may appear if the helm version is 3.10 or lower.
+>
+> helm version is too low, the current version is 3.10.1+g9f88ccb, the required version is 3.12.3
+use: 'https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3' [y/n]: y
+
+
 ### Approach 2:
 
-helmfile is pretty intresting and a very useful utility when it comes to get multiple helm charts installed. Using a single file `helmfile.yaml` we can manage n number of charts.
+helmfile is pretty intresting and a very useful utility when it comes to get multiple helm charts installed. Using a single file `helmfile.yaml` we can manage N number of charts.
 
-When it comes to installing mutiple helm charts, helmfile is a really helpful and interesting tool. The `helmfile.yaml` values file and helmfile binary is all that is needed to manage N number of charts. Internally helmfile invokes helm command to manage Kubernetes objects/charts.
+When it comes to installing mutiple helm charts, helmfile is a really helpful and interesting tool. The `helmfile.yaml` values file and helmfile binary is all that is needed to manage N number of charts. Internally helmfile invokes helm command to manage Kubernetes objects/charts. Also you can think of helmfile as a wrapper around helm together with some helm plugins.
 
 Below is a quick example, wherein I have a 3-Tier application comprising of a frontend, backend, and database and for all of them I have 3 individual charts.
 
@@ -56,3 +79,29 @@ $ tree
 
 6 directories, 24 files
 ```
+
+Now, we will use helmfile (that too a single command to get these charts installed).
+
+In the same directory where my charts are there, lets create a new file called `helmfile.yaml`. Just to add here we are referring local charts now, but we will refer charts from helm repositories in next examples.
+
+```bash
+$ cat helmfile.yaml
+releases:
+  - name: webapp
+    namespace: default
+    chart: ./webapp
+    wait: true
+  - name: backend
+    namespace: default
+    chart: ./backend
+    wait: true
+  - name: database
+    namespace: default
+    chart: ./database
+    wait: true
+```
+
+Lets break this file now:
+- There are multiple sections in this `YAML` file, but majorly we will focus on `.releases` and `.helmDefaults` sections.
+- For more details around what all things we can have in a helmfile.yaml, ref: https://helmfile.readthedocs.io/en/latest/#configuration.
+  
