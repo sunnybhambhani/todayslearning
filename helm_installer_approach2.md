@@ -110,5 +110,5 @@ releases:
 ```
 
 Lets break this file now:
-- There are multiple sections in this `YAML` file, but majorly we will focus on `.releases` and `.helmDefaults` sections.
+- There can be multiple sections in this `YAML` file, but majorly we will focus on `.releases` and `.helmDefaults` sections.
 - For more details around what all things we can have in a helmfile.yaml, ref: https://helmfile.readthedocs.io/en/latest/#configuration.
