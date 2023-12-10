@@ -98,7 +98,9 @@ releases:
   - name: webapp
     namespace: default
     chart: ./webapp
+    version: "0.1.0"
     wait: true
+    installed: true
   - name: backend
     namespace: default
     chart: ./backend
@@ -110,5 +112,12 @@ releases:
 ```
 
 Lets break this file now:
-- There can be multiple sections in this `YAML` file, but majorly we will focus on `.releases` and `.helmDefaults` sections.
+- There can be multiple sections in this `YAML` file, but majorly we will focus on `.releases`, `.repositories`, and `.helmDefaults` sections.
 - For more details around what all things we can have in a helmfile.yaml, ref: https://helmfile.readthedocs.io/en/latest/#configuration.
+- `.releases` is an array which basically signifies what all helm releases we need to deploy in a Kubernetes cluster. 
+  - Important KV pairs in each item are `.releases[].name` which refers to the name of the release.
+  - `.releases[].namesoace`, it refers to the name of the namespace where we need to install the chart.
+  - `.releases[].chart`, it refers to the location of the chart from where helm needs to pull it. In this example its in my local machine and in the current directory.
+  - `.releases[].version`, it refers to the version of chart which needs to be installed.
+  - `.releases[].installed`, it is a boolean key which referes if we want to get specific chart installed or not (by default the value is true).
+  - `.releases[].wait`, it is same as `--wait` flag of helm, which means the operation will wait untill all the components are ready/healthy. Ref: https://helm.sh/docs/intro/using_helm/.
