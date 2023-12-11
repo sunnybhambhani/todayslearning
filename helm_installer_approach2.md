@@ -116,8 +116,243 @@ Lets break this file now:
 - For more details around what all things we can have in a helmfile.yaml, ref: https://helmfile.readthedocs.io/en/latest/#configuration.
 - `.releases` is an array which basically signifies what all helm releases we need to deploy in a Kubernetes cluster. 
   - Important KV pairs in each item are `.releases[].name` which refers to the name of the release.
-  - `.releases[].namesoace`, it refers to the name of the namespace where we need to install the chart.
+  - `.releases[].namespace`, it refers to the name of the namespace where we need to install the chart.
   - `.releases[].chart`, it refers to the location of the chart from where helm needs to pull it. In this example its in my local machine and in the current directory.
   - `.releases[].version`, it refers to the version of chart which needs to be installed.
   - `.releases[].installed`, it is a boolean key which referes if we want to get specific chart installed or not (by default the value is true).
   - `.releases[].wait`, it is same as `--wait` flag of helm, which means the operation will wait untill all the components are ready/healthy. Ref: https://helm.sh/docs/intro/using_helm/.
+
+Now, lets see helmfile in action:
+- As of now nothing is installed. 
+```bash
+$ helm list -A
+NAME    NAMESPACE       REVISION        UPDATED STATUS  CHART   APP VERSION
+$
+```
+- We will first initialize helm to gather all the dependencies.
+```bash
+$ helmfile init
+helmfile initialization completed!
+$
+```
+- Lets list out what all releases are defined in our release file?
+```bash
+$ helmfile list
+NAME            NAMESPACE       ENABLED INSTALLED       LABELS  CHART           VERSION
+webapp          default         true    true                    ./webapp        0.1.0
+backend         default         true    true                    ./backend
+database        default         true    true                    ./database
+$
+```
+- All, looks good, lets apply the state file using `helmfile apply`.
+```bash
+$ helmfile apply
+Building dependency release=webapp, chart=webapp
+Building dependency release=backend, chart=backend
+Building dependency release=database, chart=database
+Comparing release=webapp, chart=webapp
+********************
+
+        Release was not present in Helm.  Diff will show entire contents as new.
+
+********************
+default, webapp, Deployment (apps) has been added:
+-
++ # Source: webapp/templates/deployment.yaml
++ apiVersion: apps/v1
+
+#.........
+#.........
+# OUTPUT TRIMMED
+
+UPDATED RELEASES:
+NAME       CHART        VERSION   DURATION
+webapp     ./webapp     0.1.0           3s
+database   ./database   0.1.0           3s
+backend    ./backend    0.1.0           3s
+```
+- If you will see here, using a single command it instructed helm to build the dependency of all the charts specified in the state file then it used `helm diff` to list out actual k8s yaml files, then it installs all the releases.
+- If you will fire `helm list` or `kubectl get pods` now, you will see all the intended resources.
+```bash
+$ helm list -A
+NAME            NAMESPACE       REVISION        UPDATED                                 STATUS          CHART           APP VERSION
+backend         default         1               2023-12-11 16:13:24.769966852 +0530 IST deployed        backend-0.1.0   1.16.0
+database        default         1               2023-12-11 16:13:24.771955874 +0530 IST deployed        database-0.1.0  1.16.0
+webapp          default         1               2023-12-11 16:13:24.771767015 +0530 IST deployed        webapp-0.1.0    1.16.0
+$ k get pods
+NAME                       READY   STATUS    RESTARTS   AGE
+backend-7f458d4566-zwcz2   1/1     Running   0          3m47s
+database-b4f679788-z6r84   1/1     Running   0          3m47s
+webapp-7f6ffdc676-g5w7j    1/1     Running   0          3m47s
+$
+```
+- Get the status using `helmfile status` if reuqired.
+```bash
+$ helmfile status
+Getting status backend
+Getting status webapp
+Getting status database
+NAME: backend
+LAST DEPLOYED: Mon Dec 11 16:13:24 2023
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+
+NAME: webapp
+LAST DEPLOYED: Mon Dec 11 16:13:24 2023
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+
+NAME: database
+LAST DEPLOYED: Mon Dec 11 16:13:24 2023
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+```
+- Now, lets assume you just need to update the database release and that too just the replicaCount, 
+  - How to update that using `values` file or using `set` key?
+  - What helmfile will do?
+  - How to check what all changes helmfile will make?
+
+By default, similar to `helm`, this will also use helm chart's default values.yaml file which is a part of helm chart itself. So either you can update that and fulfill your requirement (which idelly is not a good practice, since in real world scenario that is most unlikely to happen and ideally we should to override indented keys).
+
+To cater this need we have something called `values` and `set` which we can specify in the state file and helmfile will consider those values and will override them.
+
+Lets use the same example, but now I have added few additional line for backend as well as for the database item in our releases array.
+```bash
+releases:
+  - name: webapp
+    namespace: default
+    chart: ./webapp
+    version: "0.1.0"
+    wait: true
+    installed: true
+  - name: backend
+    namespace: default
+    chart: ./backend
+    wait: true
+    set:
+      - name: replicaCount
+        value: 2
+  - name: database
+    namespace: default
+    chart: ./database
+    wait: true
+    values:
+      - "./db-values.yaml"
+```
+
+```bash
+$ cat db-values.yaml
+replicaCount: 2
+```
+- Just to cut short, `values` is same as `--values` and `set` is same as `--set` in helm.
+- Here if you will see, for `backend` I have used `set` and I am overwriding `relicaCount` to `2` and for `database` I have used 'values' and there I have passed a path where my values file resides which contains again the `replicaCount` as `2` but for database release.
+- Now, comes the 2nd question, how to see what all differences will helmfile make, simply fire `helmfile diff`.
+```bash
+$ helmfile diff
+Building dependency release=webapp, chart=webapp
+Building dependency release=backend, chart=backend
+Building dependency release=database, chart=database
+Comparing release=webapp, chart=webapp
+Comparing release=backend, chart=backend
+default, backend, Deployment (apps) has changed:
+  # Source: backend/templates/deployment.yaml
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: backend
+# ......
+# OUTPUT TRIMMED
+
+-   replicas: 1
++   replicas: 2
+# ......
+# OUTPUT TRIMMED
+
+Comparing release=database, chart=database
+default, database, Deployment (apps) has changed:
+  # Source: database/templates/deployment.yaml
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: database
+# ......
+# OUTPUT TRIMMED
+
+-   replicas: 1
++   replicas: 2
+# ......
+# OUTPUT TRIMMED
+```
+- Here, if you will observe, firstly it compared the release webapp (wherein it didn't found any differences then it compared backend where it found that the replicaCount was updated to `2`) then it compared database where it again found that the replicaCount was updated to `2`.
+- Using `helmfile apply`, we will apply the changes now.
+> **NOTE**: `helmfile apply` basically calls two operations `helmfile diff` and `helmfilesync`.
+- Again it will show you what all changes it will bring then will apply the changes.
+```bash
+$ helmfile apply
+Building dependency release=webapp, chart=webapp
+Building dependency release=backend, chart=backend
+Building dependency release=database, chart=database
+Comparing release=webapp, chart=webapp
+default, backend, Deployment (apps) has changed:
+# ..........
+# OUTPUT TRIMMED
+
+-   replicas: 1
++   replicas: 2
+
+default, database, Deployment (apps) has changed:
+# ..........
+# OUTPUT TRIMMED
+
+-   replicas: 1
++   replicas: 2
+
+Upgrading release=database, chart=database
+Upgrading release=backend, chart=backend
+Release "backend" has been upgraded. Happy Helming!
+NAME: backend
+LAST DEPLOYED: Mon Dec 11 16:37:27 2023
+NAMESPACE: default
+STATUS: deployed
+REVISION: 2
+TEST SUITE: None
+
+Listing releases matching ^backend$
+Release "database" has been upgraded. Happy Helming!
+NAME: database
+LAST DEPLOYED: Mon Dec 11 16:37:27 2023
+NAMESPACE: default
+STATUS: deployed
+REVISION: 2
+TEST SUITE: None
+
+UPDATED RELEASES:
+NAME       CHART        VERSION   DURATION
+backend    ./backend    0.1.0           3s
+database   ./database   0.1.0           3s
+```
+
+```bash
+$ helm list
+NAME            NAMESPACE       REVISION        UPDATED                                 STATUS          CHART           APP VERSION
+backend         default         2               2023-12-11 16:37:27.366097438 +0530 IST deployed        backend-0.1.0   1.16.0
+database        default         2               2023-12-11 16:37:27.366586959 +0530 IST deployed        database-0.1.0  1.16.0
+webapp          default         1               2023-12-11 16:13:24.771767015 +0530 IST deployed        webapp-0.1.0    1.16.0
+```
+- Revision got incremented by `1`, and now I have `2` new pods running +1 for backend and +1 for database.
+```bash
+$ k get pods
+NAME                       READY   STATUS    RESTARTS   AGE
+backend-7f458d4566-6jgxk   1/1     Running   0          12s
+backend-7f458d4566-zwcz2   1/1     Running   0          24m
+database-b4f679788-9kxhl   1/1     Running   0          12s
+database-b4f679788-z6r84   1/1     Running   0          24m
+webapp-7f6ffdc676-g5w7j    1/1     Running   0          24m
+```
+
