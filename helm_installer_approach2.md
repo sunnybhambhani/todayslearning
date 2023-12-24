@@ -37,7 +37,7 @@ s3              0.14.0  Provides AWS S3 protocol support for charts and repos. h
 secrets         4.1.1   This plugin provides secrets values encryption for Helm charts secure storing
 ```
 
-> #### Note: A notice to upgrade helm may appear if the helm version is 3.10 or lower.
+> Note: A notice to upgrade helm may appear if the helm version is 3.10 or lower.
 >
 > helm version is too low, the current version is 3.10.1+g9f88ccb, the required version is 3.12.3
 use: 'https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3' [y/n]: y
@@ -92,7 +92,9 @@ Now, we will use helmfile (that too a single command to get these charts install
 
 In the same directory where my charts are there, lets create a new file called `helmfile.yaml`. Just to add here we are referring local charts now, but we will refer charts from helm repositories in next examples.
 
-```bash
+#### Location: Local helm charts
+
+```yaml
 $ cat helmfile.yaml
 releases:
   - name: webapp
@@ -112,7 +114,7 @@ releases:
 ```
 
 Lets break this file now:
-- There can be multiple sections in this `YAML` file, but majorly we will focus on `.releases`, `.repositories`, and `.helmDefaults` sections.
+- There can be multiple sections in this `YAML` file, but majorly we will focus on `.releases` and `.repositories` sections.
 - For more details around what all things we can have in a helmfile.yaml, ref: https://helmfile.readthedocs.io/en/latest/#configuration.
 - `.releases` is an array which basically signifies what all helm releases we need to deploy in a Kubernetes cluster. 
   - Important KV pairs in each item are `.releases[].name` which refers to the name of the release.
@@ -186,7 +188,7 @@ database-b4f679788-z6r84   1/1     Running   0          3m47s
 webapp-7f6ffdc676-g5w7j    1/1     Running   0          3m47s
 $
 ```
-- Get the status using `helmfile status` if reuqired.
+- Get the status using `helmfile status` if required.
 ```bash
 $ helmfile status
 Getting status backend
@@ -218,12 +220,12 @@ TEST SUITE: None
   - What helmfile will do?
   - How to check what all changes helmfile will make?
 
-By default, similar to `helm`, this will also use helm chart's default values.yaml file which is a part of helm chart itself. So either you can update that and fulfill your requirement (which idelly is not a good practice, since in real world scenario that is most unlikely to happen and ideally we should to override indented keys).
+By default, similar to `helm`, this will also use helm chart's default values.yaml file which is a part of helm chart itself. So either you can update that and fulfill your requirement (which idelly is not a good practice, since in real world scenario that is most unlikely to happen and ideally we should to override intended keys).
 
 To cater this need we have something called `values` and `set` which we can specify in the state file and helmfile will consider those values and will override them.
 
 Lets use the same example, but now I have added few additional line for backend as well as for the database item in our releases array.
-```bash
+```yaml
 releases:
   - name: webapp
     namespace: default
@@ -246,7 +248,7 @@ releases:
       - "./db-values.yaml"
 ```
 
-```bash
+```yaml
 $ cat db-values.yaml
 replicaCount: 2
 ```
@@ -291,8 +293,11 @@ default, database, Deployment (apps) has changed:
 ```
 - Here, if you will observe, firstly it compared the release webapp (wherein it didn't found any differences then it compared backend where it found that the replicaCount was updated to `2`) then it compared database where it again found that the replicaCount was updated to `2`.
 - Using `helmfile apply`, we will apply the changes now.
-> **NOTE**: `helmfile apply` basically calls two operations `helmfile diff` and `helmfilesync`.
+
+> Note: `helmfile apply` basically calls two operations `helmfile diff` and `helmfilesync`.
+
 - Again it will show you what all changes it will bring then will apply the changes.
+
 ```bash
 $ helmfile apply
 Building dependency release=webapp, chart=webapp
@@ -354,5 +359,112 @@ backend-7f458d4566-zwcz2   1/1     Running   0          24m
 database-b4f679788-9kxhl   1/1     Running   0          12s
 database-b4f679788-z6r84   1/1     Running   0          24m
 webapp-7f6ffdc676-g5w7j    1/1     Running   0          24m
+```
+
+In the above example we referred the helm charts which were placed locally, now lets see how to consume the helm charts which are a part of OCI or HTTPS repositories.
+
+#### Location: helm charts from OCI repositories
+
+- Let's now install a helm chart from an opensource oci repository (ref: https://artifacthub.io/); Just for an example we will install nginx chart.
+- Again, I have a new helmfile.yaml and the only difference here is in the chart key.
+```yaml
+releases:
+  - name: nginx
+    namespace: default
+    chart: oci://registry-1.docker.io/bitnamicharts/nginx
+    version: "15.4.4"
+    wait: true
+    set:
+      - name: service.type
+        value: ClusterIP
+```
+- Here, if you will observe firstly helmfile is pulling the helmchart then will list out the difference i.e. what all things it will create and then will get the k8s resources created.
+```bash
+$ helmfile apply
+Pulling registry-1.docker.io/bitnamicharts/nginx:15.4.4
+Comparing release=nginx, chart=/tmp/helmfile976774944/default/nginx/nginx/15.4.4/nginx
+********************
+
+        Release was not present in Helm.  Diff will show entire contents as new.
+
+********************
+default, nginx, Deployment (apps) has been added:
+# ......
+# ......
+# OUTPUT TRIMMED
+```
+
+#### Location: helm charts from HTTPS repositories
+
+- Let's now install a helm chart from an opensource HTTPS repository and here I have taken an example from the official helmfile documentation (ref: https://helmfile.readthedocs.io/en/latest/#getting-started)
+- Here is the new helmfile.yaml and now the difference here is `.repositories` and `.releases[].chart`.
+```yaml
+repositories:
+ - name: prometheus-community
+   url: https://prometheus-community.github.io/helm-charts
+
+releases:
+- name: prom-norbac-ubuntu
+  namespace: prometheus
+  chart: prometheus-community/prometheus
+  set:
+  - name: rbac.create
+    value: false
+```
+- Here, if you will observe in this helmfile we have a new section called `.repositories` which again is an array and can contain multiple repositories with a human friendly name which can be referred in the `.releases` section. For instance here the repo is `https://prometheus-community.github.io/helm-charts` and it can be referred in the releases section as `prometheus-community`.
+- And in-turn `.releases[].chart` now is `prometheus-community/prometheus` where `prometheus` is the chart name. When installing many charts from the same source, this eliminates duplication, and if we only need to change the repository, the update would only be needed at one place and we are done.
+- Another point to note here is, adding `.repositories` is similar to running `helm repo add prometheus-communit https://prometheus-community.github.io/helm-charts` this command. 
+
+```bash
+$ helmfile apply
+Adding repo prometheus-community https://prometheus-community.github.io/helm-charts
+"prometheus-community" has been added to your repositories
+
+Comparing release=prom-norbac-ubuntu, chart=prometheus-community/prometheus
+********************
+
+        Release was not present in Helm.  Diff will show entire contents as new.
+
+********************
+prometheus, prom-norbac-ubuntu-alertmanager, ConfigMap (v1) has been added:
+# ......
+# ......
+# OUTPUT TRIMMED
+```
+
+#### Repositories
+- We already touched upon this topic but just for completeness sake similar to above example we can have `OCI` repositories as well defined under `.repositories` section.
+- Here is an example for the same:
+```yaml
+repositories:
+  - name: ocirepo
+    url: registry-1.docker.io/bitnamicharts
+    oci: true
+releases:
+  - name: nginx
+    namespace: default
+    chart: ocirepo/nginx
+    version: 15.4.4
+    wait: true
+    set:
+      - name: service.type
+        value: ClusterIP
+```
+
+- If you are referring an `oci` repository make sure to use `repositories[].oci` as true.
+
+```bash
+$ helmfile apply
+Pulling registry-1.docker.io/bitnamicharts/nginx:15.4.4
+Comparing release=nginx, chart=/tmp/helmfile4237214626/default/nginx/nginx/15.4.4/nginx
+********************
+
+        Release was not present in Helm.  Diff will show entire contents as new.
+
+********************
+default, nginx, Deployment (apps) has been added:
+# ......
+# ......
+# OUTPUT TRIMMED
 ```
 
